@@ -92,6 +92,7 @@ implementation{
 		if(&pkt == msg){
 			//dbg("genDebug", "Packet Sent\n");
 			busy = FALSE;
+			dbg("Project1F", "Broadcasted\n\n");
 			post sendBufferTask();
 		}
 	}
@@ -104,11 +105,12 @@ implementation{
 		}
 		if(len==sizeof(pack)){
 			pack* myMsg=(pack*) payload;
-			pair temp;
 			pair temp1;
+			pair temp2;
 		
-			dbg("Project1F", "I A PACKET TO BE CHECKED!\n\n ");
-
+			dbg("Project1F", "I AM A PACKET TO BE CHECKED! \n");
+			dbg("Project1F", "Inside the packet is src:%d msg:%d seq:%d \n", myMsg->src,myMsg->dest,myMsg->seq);
+			
 			if(TOS_NODE_ID==myMsg->dest){
 				dbg("genDebug", "Packet from %d has arrived! Msg: %s\n", myMsg->src, myMsg->payload);
 				//dbg("genDebug", "message from %d, MSG: %s\n\n", myMsg->src, myMsg->payload);
@@ -116,7 +118,7 @@ implementation{
 					uint8_t createMsg[PACKET_MAX_PAYLOAD_SIZE];
 					uint16_t dest;
 					case PROTOCOL_PING:
-						dbg("genDebug", "Sending Ping Reply to %d! \n", myMsg->src);
+						dbg("genDebug", "Sending Ping Reply to %d! \n\n", myMsg->src);
 						makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL, PROTOCOL_PINGREPLY, sequenceNum++, (uint8_t *) myMsg->payload, sizeof(myMsg->payload));
 						sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, AM_BROADCAST_ADDR);
 						post sendBufferTask();
@@ -124,7 +126,7 @@ implementation{
 
 					case PROTOCOL_PINGREPLY:
 						dbg("Project1F", "--------------PING REPLY SRC:%d DEST:%d SEQ:%d--------------\n", myMsg->src, myMsg->dest, myMsg->seq);
-						dbg("genDebug", "Received a Ping Reply from %d!\n", myMsg->src);
+						dbg("genDebug", "Received a Ping Reply from %d!\n\n", myMsg->src);
 						break;
 						
 					case PROTOCOL_CMD:
@@ -157,30 +159,31 @@ implementation{
 				}
 			}else if(TOS_NODE_ID==myMsg->src){
 				dbg("cmdDebug", "Source is this node: %s\n", myMsg->payload);
-				dbg("Project1F", "THIS IS THE SOURCE? SRC:%d dest:%d seq:%d \n", myMsg->src, myMsg->dest, myMsg->seq);
+				dbg("Project1F", "THIS IS THE SOURCE? SRC:%d dest:%d seq:%d \n\n", myMsg->src, myMsg->dest, myMsg->seq);
 				return msg;
 			}
 			else{
 				//checks whether the packet has already been stored in the current list.
 				dbg("Project1F","I AM A PACKET FOR BROADCASTING \n");
 				if(!arrListContains(&Received, myMsg->src, myMsg->seq)){
-					dbg("Project1F", "BroadCasting from %d SEQ#:%d DEST:%d \n\n", TOS_NODE_ID, myMsg->seq, myMsg->dest);
+					dbg("Project1F", "BroadCasting from %d SEQ#:%d DEST:%d \n", TOS_NODE_ID, myMsg->seq, myMsg->dest);
 					//if(myMsg->protocol == PROTOCOL_PINGREPLY){
 					//dbg("Project1F", "--------ADDING TO THE LIST-------- \n");
 					makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol, myMsg->seq, (uint8_t *) myMsg->payload, sizeof(myMsg->payload));
 					sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, AM_BROADCAST_ADDR);
 					
-					temp.seq = myMsg->seq;
-					temp.src = myMsg->src;
-					arrListPushBack(&Received,temp);
+					temp1.seq = myMsg->seq;
+					temp1.src = myMsg->src;
+					arrListPushBack(&Received,temp1);
 					
 					post sendBufferTask();
+					dbg("Project1F", "Broadcasting\n\n");
 				}
 				else{
 					
 					dbg("Project1F", "DROPPING packets with src:%d seq:%d \n", myMsg->src, myMsg->seq);
 					temp1 = back(&Received);
-					dbg("Project1F", "Size is %d seq# of last is %d\n\n",arrListSize(&Received), temp1.seq);
+					dbg("Project1F", "Size is %d seq# of last is %d\n\n",arrListSize(&Received), temp2.seq);
 					}
 				
 			}		

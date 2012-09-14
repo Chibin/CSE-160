@@ -85,7 +85,7 @@ def sendCMD(string):
 
 runTime(200)
 sendCMD("5 6 Hello World!")
-sendCMD("5 6 Hello")
+#sendCMD("6 5 Hello")
 #sendCMD("5 6 derp")
 #sendCMD("5 6 what?")
 #sendCMD("0 6 cmd ping 5 PING")
