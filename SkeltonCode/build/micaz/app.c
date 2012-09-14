@@ -210,7 +210,7 @@ typedef struct __nesc_unnamed4243 {
 } ldiv_t;
 
 
-typedef int (*__compar_fn_t)(const void *arg_0x2ad28b91b838, const void *arg_0x2ad28b91bb10);
+typedef int (*__compar_fn_t)(const void *arg_0x2b863c541838, const void *arg_0x2b863c541b10);
 # 25 "/home/maru/local/tinyos-2.1.1/tos/system/tos.h"
 typedef uint8_t bool;
 enum __nesc_unnamed4244 {
@@ -1435,14 +1435,14 @@ typedef nx_struct message_t {
   nx_uint8_t footer[sizeof(message_footer_t )];
   nx_uint8_t metadata[sizeof(message_metadata_t )];
 } __attribute__((packed)) message_t;
-typedef TMilli Node__recheckTimer__precision_tag;
+typedef TMilli Node__neighborDiscoveryTimer__precision_tag;
 typedef TMilli Node__pingTimeoutTimer__precision_tag;
-# 58 "/home/maru/workspace1/SkeltonCode/src/Node.nc"
+# 60 "/home/maru/workspace1/SkeltonCode/src/Node.nc"
 enum Node____nesc_unnamed4314 {
-#line 58
+#line 60
   Node__sendBufferTask = 0U
 };
-#line 58
+#line 60
 typedef int Node____nesc_sillytask_sendBufferTask[Node__sendBufferTask];
 # 61 "/home/maru/local/tinyos-2.1.1/tos/system/SchedulerBasicP.nc"
 enum SchedulerBasicP____nesc_unnamed4315 {

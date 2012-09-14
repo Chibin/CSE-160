@@ -32,7 +32,7 @@ module Node{
 	uses interface AMSend;
 	uses interface SplitControl as AMControl;
 	uses interface Receive;
-	uses interface Timer<TMilli> as recheckTimer; // Add the line here.
+	uses interface Timer<TMilli> as neighborDiscoveryTimer; // Add the line here.
 	
 	
 }
@@ -47,14 +47,19 @@ implementation{
 
 	sendBuffer packBuffer;	
 	arrlist Received;
+	
+	arrlist friendList;
 
 	bool isActive = TRUE;
+	
+	int discoveryPacket = AM_BROADCAST_ADDR;
 
 	//Ping/PingReply Variables
 	pingList pings;
 
 	error_t send(uint16_t src, uint16_t dest, pack *message);
 	void makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t Protocol, uint16_t seq, uint8_t *payload, uint8_t length);
+	void arrPrintList(arrlist *list);
 	task void sendBufferTask();
 			
 	
@@ -67,7 +72,7 @@ implementation{
 	event void AMControl.startDone(error_t err){
 		if(err == SUCCESS){
 			call pingTimeoutTimer.startPeriodic(PING_TIMER_PERIOD + (uint16_t) ((call Random.rand16())%200));
-			call recheckTimer.startPeriodic(1000);
+			call neighborDiscoveryTimer.startPeriodic(50000 + (uint16_t) ((call Random.rand16())%200));
 		}else{
 			//Retry until successful
 			call AMControl.start();
@@ -77,13 +82,25 @@ implementation{
 	event void AMControl.stopDone(error_t err){}
 
 	event void pingTimeoutTimer.fired(){
-		dbg("Project1N", "Checking ping timme out... \n");
+		//dbg("Project1N", "Checking ping timme out... \n");
 		checkTimes(&pings, call pingTimeoutTimer.getNow());
 	}
 	
-	event void recheckTimer.fired(){
-		dbg("Project1N","I DONT KNOW WHO IM NEXT TO, IM LONELY... \n" );
-		call recheckTimer.getNow();
+	event void neighborDiscoveryTimer.fired(){
+		pack discoveryPackage;
+		uint8_t createMsg[PACKET_MAX_PAYLOAD_SIZE];
+		uint16_t dest;
+		
+		memcpy(&createMsg, "", sizeof(PACKET_MAX_PAYLOAD_SIZE));
+		memcpy(&dest, "", sizeof(uint8_t));
+		makePack(&sendPackage, TOS_NODE_ID, discoveryPacket, MAX_TTL, PROTOCOL_PING, sequenceNum++, (uint8_t *)createMsg,
+		sizeof(createMsg));	
+		
+		dbg("Project1N", "Hi, is anyone there? :D \n");
+		sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, discoveryPacket);
+		
+		post sendBufferTask();
+	//	dbg("Project1N","I DONT KNOW WHO IM NEXT TO, IM LONELY... \n" );
 	}
 	
 	
@@ -158,9 +175,38 @@ implementation{
 						break;
 				}
 			}else if(TOS_NODE_ID==myMsg->src){
-				dbg("cmdDebug", "Source is this node: %s\n", myMsg->payload);
+				//dbg("cmdDebug", "Source is this node: %s\n", myMsg->payload);
 				dbg("Project1F", "THIS IS THE SOURCE? SRC:%d dest:%d seq:%d \n\n", myMsg->src, myMsg->dest, myMsg->seq);
 				return msg;
+			}
+			else if(myMsg->dest == discoveryPacket ){
+				pair friendListInfo;
+				
+				switch(myMsg->protocol){
+					case PROTOCOL_PING:
+						makePack(&sendPackage, TOS_NODE_ID, discoveryPacket, MAX_TTL, PROTOCOL_PINGREPLY, sequenceNum++, (uint8_t *) myMsg->payload, sizeof(myMsg->payload));
+						sendBufferPushBack(&packBuffer, sendPackage, TOS_NODE_ID, myMsg->src);
+						dbg("Project1N", "I am ignoring you %d. \n", myMsg->src);
+						post sendBufferTask();
+						break;
+					case PROTOCOL_PINGREPLY:
+						dbg("Project1N", "That's mean :< %d. \n", myMsg->src);
+						if(!arrListContains(&friendList, myMsg->src, myMsg->seq)){
+							friendListInfo.seq = myMsg->seq;
+							friendListInfo.src = myMsg->src;
+							arrListPushBack(&friendList,friendListInfo);
+							dbg("Project1N", "Adding to my FriendList anyways T_T \n\n");
+						}
+						else{
+							dbg("Project1N", "Oh you're already in my FriendList? :D");
+						}
+						arrPrintList(&friendList);
+						break;
+					default:
+						dbg("Project1N", "I should never get here, I hope. \n");
+						break;	
+				}
+				 
 			}
 			else{
 				//checks whether the packet has already been stored in the current list.
@@ -253,5 +299,12 @@ implementation{
 		Package->seq = seq;
 		Package->protocol = protocol;
 		memcpy(Package->payload, payload, length);
+	}
+	
+	void arrPrintList(arrlist* list){
+		uint8_t i;
+		for(i = 0; i<list->numValues; i++){
+			dbg("Project1N","I think I am friends with %d and the last time we met was %d \n\n", list->values[i].src, list->values[i].seq);
+		}	
 	}
 }

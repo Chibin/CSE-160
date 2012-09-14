@@ -18,7 +18,7 @@ implementation {
 	components RandomC as Random;
 	
 	components new TimerMilliC() as pingTimeoutTimer;
-	components new TimerMilliC() as recheckTimer;
+	components new TimerMilliC() as neighborDiscoveryTimer;
 	
 	components ActiveMessageC;
 	components new AMSenderC(6);
@@ -35,7 +35,7 @@ implementation {
 	Node.AMPacket -> AMSenderC;
 	Node.AMSend -> AMSenderC;
 	Node.AMControl -> ActiveMessageC;
-	Node.recheckTimer-> recheckTimer; // Add this line here.
+	Node.neighborDiscoveryTimer-> neighborDiscoveryTimer; // Add this line here.
 	
 
 	Node.Receive -> AMReceiverC;

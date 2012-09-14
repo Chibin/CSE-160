@@ -21,8 +21,8 @@ for line in f:
 # Channels used for debuging
 t.addChannel("genDebug", sys.stdout)
 t.addChannel("cmdDebug", sys.stdout);
-t.addChannel("Project1F", sys.stdout)
-#t.addChannel("Project1N", sys.stdout)
+#t.addChannel("Project1F", sys.stdout)
+t.addChannel("Project1N", sys.stdout)
 
 noise = open("no_noise.txt", "r")
 for line in noise:
@@ -84,7 +84,7 @@ def sendCMD(string):
 
 
 runTime(200)
-sendCMD("5 6 Hello World!")
+#sendCMD("5 6 Hello World!")
 #sendCMD("6 5 Hello")
 #sendCMD("5 6 derp")
 #sendCMD("5 6 what?")

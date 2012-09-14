@@ -21,7 +21,7 @@ bool arrListPushBack(arrlist* cur, dataType newVal){
 	if(cur->numValues != MAXNUMVALS){
 		cur->values[cur->numValues] = newVal;
 		++cur->numValues;
-		return TRUE;	
+		return TRUE;
 	}else return FALSE;
 }
 
@@ -33,7 +33,7 @@ bool arrListPushFront(arrlist* cur, dataType newVal){
 		}
 		cur->values[0] = newVal;
 		++cur->numValues;
-		return TRUE;	
+		return TRUE;
 	}else	return FALSE;
 } 
 
@@ -86,4 +86,12 @@ bool arrListContains(arrlist* list, uint8_t iSrc, uint8_t iSeq){
 	return FALSE;
 }
 
+/*
+void arrPrintList(arrlist* list, uint8_t iSrc, uint8_t iSeq){
+	uint8_t i=0;
+	for(i; i<list->numValues; i++){
+		dbg("Project1N","I think I am friends with %d and the last time we met was %d", list->values[i].src, list->values[i].seq);
+	}	
+	
+}*/
 #endif /* LIST_H */
