@@ -19,6 +19,7 @@ implementation {
 	
 	components new TimerMilliC() as pingTimeoutTimer;
 	components new TimerMilliC() as neighborDiscoveryTimer;
+	components new TimerMilliC() as neighborUpdateTimer;
 	
 	components ActiveMessageC;
 	components new AMSenderC(6);
@@ -36,7 +37,7 @@ implementation {
 	Node.AMSend -> AMSenderC;
 	Node.AMControl -> ActiveMessageC;
 	Node.neighborDiscoveryTimer-> neighborDiscoveryTimer; // Add this line here.
-	
+	Node.neighborUpdateTimer-> neighborUpdateTimer;
 
 	Node.Receive -> AMReceiverC;
 

@@ -6,6 +6,8 @@
 typedef struct pair{
 	uint8_t src;
 	uint8_t seq;
+	uint32_t timer;
 }pair;
+
 
 #endif

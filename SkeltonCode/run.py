@@ -21,8 +21,8 @@ for line in f:
 # Channels used for debuging
 t.addChannel("genDebug", sys.stdout)
 t.addChannel("cmdDebug", sys.stdout);
-#t.addChannel("Project1F", sys.stdout)
-t.addChannel("Project1N", sys.stdout)
+t.addChannel("Project1F", sys.stdout)
+#t.addChannel("Project1N", sys.stdout)
 
 noise = open("no_noise.txt", "r")
 for line in noise:
@@ -59,7 +59,7 @@ def runTime(amount):
 msg = pack()
 msg.set_seq(0)
 msg.set_TTL(15)
-msg.set_protocol(0)
+msg.set_protocol(99)
 
 pkt = t.newPacket()
 pkt.setData(msg.data)
@@ -84,11 +84,11 @@ def sendCMD(string):
 
 
 runTime(200)
-#sendCMD("5 6 Hello World!")
+#sendCMD("4 6 Hello World!")
 #sendCMD("6 5 Hello")
 #sendCMD("5 6 derp")
 #sendCMD("5 6 what?")
-#sendCMD("0 6 cmd ping 5 PING")
+sendCMD("0 4 cmd ping 6 PING")
 #while True:
 #sendCMD("0 6 cmd ping 5 PING")
 #msg.set_seq(1)

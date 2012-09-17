@@ -86,12 +86,42 @@ bool arrListContains(arrlist* list, uint8_t iSrc, uint8_t iSeq){
 	return FALSE;
 }
 
-/*
-void arrPrintList(arrlist* list, uint8_t iSrc, uint8_t iSeq){
+bool arrListContainsKey(arrlist* list, uint8_t iSrc){
 	uint8_t i=0;
 	for(i; i<list->numValues; i++){
-		dbg("Project1N","I think I am friends with %d and the last time we met was %d", list->values[i].src, list->values[i].seq);
-	}	
+		if(iSrc == list->values[i].src) return TRUE;
+	}
+	return FALSE;
+}
+
+void arrListReplace(arrlist *list, uint8_t iSrc, uint8_t iSeq, uint32_t iTimer){
+		uint8_t i;
+	for(i = 0; i<list->numValues; i++){
+		if(iTimer >= list->values[i].timer && iSrc == list->values[i].src){
+			list->values[i].seq = iSeq;
+			list->values[i].src = iSrc;
+			list->values[i].timer = iTimer;
+		}
+	}
+}
+
+//Checks for the node time out
+void arrListRemove(arrlist *list,uint32_t iTimer){
+	uint8_t i;
+	uint8_t j;
+	for(i = 0; i<list->numValues; i++){
+		if(iTimer >= list->values[i].timer){
+			if(list->numValues > 1){
+				for(j = i+1; j < list->numValues; j++){
+					list->values[i].src = list->values[j].src;
+					list->values[i].seq = list->values[j].seq;
+					list->values[i].timer = list->values[j].timer;
+				}
+				list->numValues--;	
+			}
+		}
+	}
 	
-}*/
+}
+
 #endif /* LIST_H */
