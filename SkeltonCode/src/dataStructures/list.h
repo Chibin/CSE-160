@@ -105,23 +105,26 @@ void arrListReplace(arrlist *list, uint8_t iSrc, uint8_t iSeq, uint32_t iTimer){
 	}
 }
 
+/*
 //Checks for the node time out
 void arrListRemove(arrlist *list,uint32_t iTimer){
 	uint8_t i;
 	uint8_t j;
-	for(i = 0; i<list->numValues; i++){
-		if(iTimer >= list->values[i].timer){
+	for(i = 0; i<=list->numValues; i++){
+		//printf("%d > %d \n", iTimer, list->values[i].timer);
+		if(iTimer >= list->values[i].timer && list->values[i].timer != 0){
+			printf("Removing %d from friendList, last seen at time %d. Time removed: %d \n\n", list->values[i].src, list->values[i].timer, iTimer);
+			
 			if(list->numValues > 1){
-				for(j = i+1; j < list->numValues; j++){
-					list->values[i].src = list->values[j].src;
-					list->values[i].seq = list->values[j].seq;
-					list->values[i].timer = list->values[j].timer;
-				}
-				list->numValues--;	
+				list->values[i] = list->values[list->numValues-1];		
+				list->numValues--;
+				i--;
 			}
+			else
+				list->numValues = 0;
 		}
 	}
 	
 }
-
+*/
 #endif /* LIST_H */

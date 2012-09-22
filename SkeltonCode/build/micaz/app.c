@@ -210,7 +210,7 @@ typedef struct __nesc_unnamed4243 {
 } ldiv_t;
 
 
-typedef int (*__compar_fn_t)(const void *arg_0x2b92b1ef8838, const void *arg_0x2b92b1ef8b10);
+typedef int (*__compar_fn_t)(const void *arg_0x2b253f73d838, const void *arg_0x2b253f73db10);
 # 25 "/home/maru/local/tinyos-2.1.1/tos/system/tos.h"
 typedef uint8_t bool;
 enum __nesc_unnamed4244 {
@@ -874,7 +874,7 @@ enum __nesc_unnamed4301 {
 enum __nesc_unnamed4302 {
   PROTOCOL_PING = 0, 
   PROTOCOL_PINGREPLY = 1, 
-  PROTOCOL_LINKEDLIST = 2, 
+  PROTOCOL_LINKSTATE = 2, 
   PROTOCOL_NAME = 3, 
   PROTOCOL_TCP = 4, 
   PROTOCOL_CMD = 99
@@ -955,6 +955,13 @@ typedef struct sendBuffer {
 } sendBuffer;
 # 7 "/home/maru/workspace1/SkeltonCode/src/dataStructures/arrTimerList.h"
 typedef pair timerDataType;
+# 8 "/home/maru/workspace1/SkeltonCode/src/dataStructures/linkstatetest.h"
+#line 4
+typedef nx_struct linkstatetest {
+  nx_uint8_t derpOrigin;
+  nx_uint8_t derpadorp;
+  nx_uint8_t stopcallingitderp;
+} __attribute__((packed)) linkstatetest;
 # 9 "/home/maru/workspace1/SkeltonCode/src/dataStructures/pingInfo.h"
 #line 5
 typedef struct pingInfo {
@@ -1440,13 +1447,14 @@ typedef nx_struct message_t {
 } __attribute__((packed)) message_t;
 typedef TMilli Node__neighborDiscoveryTimer__precision_tag;
 typedef TMilli Node__neighborUpdateTimer__precision_tag;
+typedef TMilli Node__lspTimer__precision_tag;
 typedef TMilli Node__pingTimeoutTimer__precision_tag;
-# 67 "/home/maru/workspace1/SkeltonCode/src/Node.nc"
+# 73 "/home/maru/workspace1/SkeltonCode/src/Node.nc"
 enum Node____nesc_unnamed4314 {
-#line 67
+#line 73
   Node__sendBufferTask = 0U
 };
-#line 67
+#line 73
 typedef int Node____nesc_sillytask_sendBufferTask[Node__sendBufferTask];
 # 61 "/home/maru/local/tinyos-2.1.1/tos/system/SchedulerBasicP.nc"
 enum SchedulerBasicP____nesc_unnamed4315 {

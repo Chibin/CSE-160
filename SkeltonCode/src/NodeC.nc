@@ -20,6 +20,7 @@ implementation {
 	components new TimerMilliC() as pingTimeoutTimer;
 	components new TimerMilliC() as neighborDiscoveryTimer;
 	components new TimerMilliC() as neighborUpdateTimer;
+	components new TimerMilliC() as lspTimer;
 	
 	components ActiveMessageC;
 	components new AMSenderC(6);
@@ -38,7 +39,7 @@ implementation {
 	Node.AMControl -> ActiveMessageC;
 	Node.neighborDiscoveryTimer-> neighborDiscoveryTimer; // Add this line here.
 	Node.neighborUpdateTimer-> neighborUpdateTimer;
-
+	Node.lspTimer->lspTimer;
 	Node.Receive -> AMReceiverC;
 
 }

@@ -20,9 +20,11 @@ for line in f:
 
 # Channels used for debuging
 t.addChannel("genDebug", sys.stdout)
-t.addChannel("cmdDebug", sys.stdout);
-t.addChannel("Project1F", sys.stdout)
+t.addChannel("cmdDebug", sys.stdout)
+#t.addChannel("Project1F", sys.stdout)
 #t.addChannel("Project1N", sys.stdout)
+t.addChannel("Project2L", sys.stdout)
+
 
 noise = open("no_noise.txt", "r")
 for line in noise:
@@ -38,7 +40,7 @@ for i in range(1, nodeAmount+1):
 
 
 for i in range(1, nodeAmount+1):
-    t.getNode(i).bootAtTime(1000+(i-1)*1333);
+    t.getNode(i).bootAtTime(1000+(i-1)*13);
 
 def package(string):
  	ints = []
@@ -84,14 +86,4 @@ def sendCMD(string):
 
 
 runTime(200)
-#sendCMD("4 6 Hello World!")
-#sendCMD("6 5 Hello")
-#sendCMD("5 6 derp")
-#sendCMD("5 6 what?")
 sendCMD("0 4 cmd ping 6 PING")
-#while True:
-#sendCMD("0 6 cmd ping 5 PING")
-#msg.set_seq(1)
-#sendCMD("0 6 cmd ping 5 PING1")
-#sendCMD("0 6 cmd ping 5 PING2")
- #   continue
