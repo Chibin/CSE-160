@@ -30,15 +30,18 @@ void lspTableinit(lspTable* list){
 
 bool lspTablePushBack(lspTable* cur, lspTuple newVal){
 	if(cur->numValues != MAXNODEVAL){
-		printf("Push back dest:%d  cost:%d nextHop:%d\n", newVal.dest,newVal.nodeNcost, newVal.nextHop);
+	//	printf("Push back dest:%d  cost:%d nextHop:%d\n", newVal.dest,newVal.nodeNcost, newVal.nextHop);
 		cur->lspTuples[cur->numValues] = newVal;
 		cur->numValues++;
 		return TRUE;
 	}else return FALSE;
 }
 
-bool lspTableIsEmpty(lspTable* cur){	
-	return cur->numValues == 0;
+bool lspTableIsEmpty(lspTable* cur){
+	if(cur->numValues == 0)
+		return TRUE;
+	else
+		return FALSE;
 }
 
 //returns true if the node and the lsp tuple has the same destination
@@ -54,13 +57,13 @@ bool lspTableContains(lspTable* list, int node){
 bool lspTableContainsDest(lspTable* list, int node){
 	uint8_t i;
 	for(i = 0; i<list->numValues; i++){
-		printf("comparing %d and %d \n", i, node);
+		//printf("comparing %d and %d \n", i, node);
 		if(node == list->lspTuples[i].dest){
-			printf("true!!! \n");
+			//printf("true!!! \n");
 			 return TRUE;
 		}
 	}
-	printf("FALSE! \n");
+	//printf("FALSE! \n");
 	return FALSE;
 }
 

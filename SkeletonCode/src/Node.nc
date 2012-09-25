@@ -48,7 +48,7 @@ implementation{
 
 	uint16_t neighborSequenceNum = 0;
 	
-	int totalNodes = 5;
+	int totalNodes = 7;
 	
 	//---- PROJECT 2 VARIABLES -----
 	//We're keeping track of each node with the index. Assume that the index is the name of the node.
@@ -109,7 +109,7 @@ implementation{
 			call pingTimeoutTimer.startPeriodic(PING_TIMER_PERIOD + (uint16_t) ((call Random.rand16())%200));
 			call neighborDiscoveryTimer.startPeriodic(PING_TIMER_PERIOD + (uint16_t) ((call Random.rand16())%200));
 			call neighborUpdateTimer.startPeriodic(PING_TIMER_PERIOD + (uint16_t)((call Random.rand16())%200));
-			call lspTimer.startPeriodic(PING_TIMER_PERIOD+50000 + (uint16_t)((call Random.rand16())%200));
+			call lspTimer.startPeriodic(PING_TIMER_PERIOD+10000 + (uint16_t)((call Random.rand16())%200));
 		}else{
 			//Retry until successful
 			call AMControl.start();
@@ -523,6 +523,8 @@ implementation{
 		lspSrc temp2;
 		int lspTupNum;
 		int totalCost;
+		int confirmedNode[totalNodes];
+		int neighborCheck;
 		lspTableinit(&tentativeList);
 		lspTableinit(&confirmedList);
 		temp.dest = TOS_NODE_ID;
@@ -546,29 +548,6 @@ implementation{
 				lspTablePushBack(&tentativeList, temp);	
 			}
 		}
-		
-		/*
-		dbg("Project2D", "Printing out the tentativeList. \n");
-		if(!lspTableIsEmpty(&tentativeList)){
-			for(i = 0; i < tentativeList.numValues; i++){
-				dbg("Project2D", "dest: %d cost:%d nextHop:%d \n", tentativeList.lspTuples[i].dest,tentativeList.lspTuples[i].nodeNcost, tentativeList.lspTuples[i].nextHop);
-			}
-		}
-		else
-			dbg("Project2D", "The list is empty \n");
-		*/
-
-
-	//	while(!lspTableIsEmpty(&tentativeList)){
-			
-			
-			
-			
-			
-			
-	//	}
-
-
 
 		/*
  		* 
@@ -618,51 +597,45 @@ implementation{
 		}
 		*/
 		
-		
-		
 		 while(!lspTableIsEmpty(&tentativeList)){
-		 	dbg("Project2D","In the While loop \n");
+		 //	dbg("Project2D","In the While loop \n");
 			temp2 = lspTableMinCost(&tentativeList);
 			lspTupNum = temp2.src;
 			lspTup = lspTableRemove(&tentativeList, temp2.indexNumber);
-			dbg("Project2D","PushBack from confirmedList \n");
-			if(!lspTableContainsDest(&confirmedList, lspTup.dest)){
-				lspTablePushBack(&confirmedList,lspTup);	
-			}
-			else{
-				lspTupleReplace(&confirmedList,lspTup,lspTup.nodeNcost);
-			}
-			
-				for(i = 0; i < totalNodes; i++){	
-					//My neighbors do not have a cost of infinity, in this case 255
-					if(!lspTableContainsDest(&confirmedList, i)){
-						if(lspMAP[lspTupNum].cost[i] != 255 && lspMAP[lspTupNum].cost[i] != 0){
-							temp.nextHop = lspTupNum;
-							temp.nodeNcost = lspMAP[lspTupNum].cost[i]+lspTup.nodeNcost;
-							temp.dest = i;
-							dbg("Project2D","PushBack from tentativeList \n");
-							lspTablePushBack(&tentativeList, temp);	
-						}
-					}
-					else{
+			dbg("Project2D","PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", lspTup.dest,lspTup.nodeNcost, lspTup.nextHop);
+			if(!lspTableContainsDest(&confirmedList, lspTup.dest))
+				lspTablePushBack(&confirmedList,lspTup);
+			neighborCheck = lspTup.dest;
+			//confirmedNode[temp2.src] = 1;
+				
+			for(i = 0; i < totalNodes; i++){
+				//dbg("Project2D", "Looping through %d \n", i);
+				//dbg("Project2D", "Printing out the list neighbor:%d src:%d cost:%d \n",i, neighborCheck, lspMAP[neighborCheck].cost[i]);
+				if(lspMAP[neighborCheck].cost[i] != 255 && lspMAP[neighborCheck].cost[i] != 0){
+					//if(i != lspTupNum){
+						//dbg("Projecg2D", "I get in here");						
 						temp.nextHop = lspTupNum;
-						temp.nodeNcost = lspMAP[lspTupNum].cost[i]+lspTup.nodeNcost;
+						temp.nodeNcost = lspMAP[neighborCheck].cost[i]+lspTup.nodeNcost;
 						temp.dest = i;
-						if(lspTupleReplace(&tentativeList,temp,lspMAP[lspTupNum].cost[i]+lspTup.nodeNcost))
-							dbg("Project2D", "I replaced something \n");
+						if(lspTupleReplace(&tentativeList,temp,lspMAP[neighborCheck].cost[i]+lspTup.nodeNcost)){
+							dbg("Project2D","Replace from tentativeList  dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
+						}
 						else
-							dbg("Project2D", "I didn't replace anything\n");
-					}
+							if(!lspTableContainsDest(&confirmedList, i)){
+							dbg("Project2D","PushBack from tentativeList  dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
+								lspTablePushBack(&tentativeList, temp);
+							}
+				//	}
 				}
-			
-			
-			
+				//else
+					//dbg("Project2D", "what? \n");
+			}
 		}
 		 
 		 
 		 
 		 
-		dbg("Project2D", "Printing the final table! \n");
+		dbg("Project2D", "Printing the routing table! \n");
 		for(i = 0; i < confirmedList.numValues; i++){
 			dbg("Project2D", "dest:%d cost:%d nextHop:%d \n",confirmedList.lspTuples[i].dest,confirmedList.lspTuples[i].nodeNcost,confirmedList.lspTuples[i].nextHop);
 		}

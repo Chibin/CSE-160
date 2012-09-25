@@ -10,7 +10,7 @@ t = Tossim([])
 r = t.radio()
 f = open("topo.txt", "r")
 
-nodeAmount = 4
+nodeAmount = 6
 
 for line in f:
   s = line.split()
