@@ -24,7 +24,10 @@ t.addChannel("cmdDebug", sys.stdout)
 #t.addChannel("Project1F", sys.stdout)
 #t.addChannel("Project1N", sys.stdout)
 #t.addChannel("Project2L", sys.stdout)
-t.addChannel("Project2D", sys.stdout)
+#t.addChannel("Project2D", sys.stdout)
+t.addChannel("Project2F", sys.stdout)
+#t.addChannel("Project2N", sys.stdout)
+#t.addChannel("Project2test", sys.stdout)
 
 noise = open("no_noise.txt", "r")
 for line in noise:
@@ -40,7 +43,7 @@ for i in range(1, nodeAmount+1):
 
 
 for i in range(1, nodeAmount+1):
-    t.getNode(i).bootAtTime(1000+(i-1)*13);
+    t.getNode(i).bootAtTime(1000+(i-1)*133);
 
 def package(string):
  	ints = []
@@ -85,5 +88,9 @@ def sendCMD(string):
 	runTime(2);
 
 
+runTime(150)
+sendCMD("0 6 cmd ping 5 PING")
 runTime(200)
-#sendCMD("0 4 cmd ping 6 PING")
+sendCMD("2 2 cmd kill")
+runTime(200)
+sendCMD("0 6 cmd ping 5 PING")

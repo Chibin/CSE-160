@@ -15,7 +15,6 @@
 #include "dataStructures/hashmap.h"
 //extra dataStructures
 #include "dataStructures/arrTimerList.h"
-#include "dataStructures/linkstatetest.h"
 #include "dataStructures/lspTable.h"
 
 //Ping Includes
@@ -45,24 +44,21 @@ module Node{
 
 implementation{
 	uint16_t sequenceNum = 0;
-
 	uint16_t neighborSequenceNum = 0;
-	
 	int totalNodes = 7;
 	
 	//---- PROJECT 2 VARIABLES -----
 	//We're keeping track of each node with the index. Assume that the index is the name of the node.
 	//note: We need to shift the nodes by 1 so that index 0 is keeping track of node 1. (May be reconsidered)
 	uint16_t linkSequenceNum = 0;
-	
-	uint8_t lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};	
 	lspTable confirmedList;
 	lspTable tentativeList;
 	lspMap lspMAP[20];
 	arrlist lspTracker;
-	lspTable routingTable[20];
+	float cost[20];
+	int lastSequenceTracker[20] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+	float totalAverageEMA[20] =  {0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215,0.0039215};
 	
-		
 	//------------------------------
 	bool busy = FALSE;
 	
@@ -87,17 +83,19 @@ implementation{
 	
 	//project 1
 	void arrPrintList(arrlist *list);
-	void arrListRemove(arrlist *list,uint32_t iTimer);
+	bool arrListRemove(arrlist *list, uint32_t iTimer);
 	void neighborDiscoveryPacket();
 	
 	//project 2
 	void printlspMap(lspMap *list);
 	void lspNeighborDiscoveryPacket();
 	void dijkstra();
-	void forwardPacket();
+	int forwardPacketTo(lspTable* list, int dest);
+	void printCostList(lspMap *list, uint8_t nodeID);
+	float EMA(float prevEMA, float now,float weight);
 	
 	task void sendBufferTask();
-			
+	
 	event void Boot.booted(){
 		call AMControl.start();
 		arrListInit(&Received);
@@ -109,7 +107,7 @@ implementation{
 			call pingTimeoutTimer.startPeriodic(PING_TIMER_PERIOD + (uint16_t) ((call Random.rand16())%200));
 			call neighborDiscoveryTimer.startPeriodic(PING_TIMER_PERIOD + (uint16_t) ((call Random.rand16())%200));
 			call neighborUpdateTimer.startPeriodic(PING_TIMER_PERIOD + (uint16_t)((call Random.rand16())%200));
-			call lspTimer.startPeriodic(PING_TIMER_PERIOD+10000 + (uint16_t)((call Random.rand16())%200));
+			call lspTimer.startPeriodic(PING_TIMER_PERIOD + (uint16_t)((call Random.rand16())%200));
 		}else{
 			//Retry until successful
 			call AMControl.start();
@@ -122,23 +120,26 @@ implementation{
 		checkTimes(&pings, call pingTimeoutTimer.getNow());
 	}
 	
-	//chrcks who are the neighbors
+	//checks who are the neighbors
 	event void neighborDiscoveryTimer.fired(){
-		neighborDiscoveryPacket();
+		if(isActive)neighborDiscoveryPacket();
 	}
 	
 	
 	//checks if the time is still valid to be in the list
 	event void neighborUpdateTimer.fired(){
-		uint32_t timerCheck = call neighborUpdateTimer.getNow()-10000; //give the node a 10 second margin from the current time.
-		dbg("Project1N", "Checking the neighbor %d \n", timerCheck);
-	//	arrListRemove(&friendList, timerCheck);
-		arrPrintList(&friendList);
+		uint32_t timerCheck = call neighborUpdateTimer.getNow(); //give the node a 50 second margin from the current time.
+			//dbg("Project2test", "Checking the neighbor %d \n", timerCheck);
+			if(arrListRemove(&friendList, timerCheck)){
+				//lspNeighborDiscoveryPacket();
+				dbg("Project2test", "Removed something \n");
+				arrPrintList(&friendList);
+			}
 		dbg("Project1N", "Done checking \n\n");
 	}
 	
 	event void lspTimer.fired(){
-		 lspNeighborDiscoveryPacket();
+		lspNeighborDiscoveryPacket();
 	}
 	
 	
@@ -147,7 +148,6 @@ implementation{
 		if(&pkt == msg){
 			//dbg("genDebug", "Packet Sent\n");
 			busy = FALSE;
-			//dbg("Project1F", "Broadcasted\n\n");
 			post sendBufferTask();
 		}
 	}
@@ -155,65 +155,81 @@ implementation{
 
 	event message_t* Receive.receive(message_t* msg, void* payload, uint8_t len){
 		if(!isActive){
-			dbg("genDebug", "The Node is inactive, packet will not be read.");
+			//dbg("genDebug", "The Node is inactive, packet will not be read.\n");
 			return msg;
 		}
 		if(len==sizeof(pack)){
 			pack* myMsg=(pack*) payload;
 			pair temp1;
 			pair temp2;
+			pair temporary;
 
 			if(TOS_NODE_ID==myMsg->dest){
 				dbg("genDebug", "Packet from %d has arrived! Msg: %s\n", myMsg->src, myMsg->payload);
 				switch(myMsg->protocol){
 					uint8_t createMsg[PACKET_MAX_PAYLOAD_SIZE];
 					uint16_t dest;
+					int forwardTo;
 					case PROTOCOL_PING:
-						dbg("genDebug", "Sending Ping Reply to %d! \n\n", myMsg->src);
-						makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL, PROTOCOL_PINGREPLY, sequenceNum++, (uint8_t *) myMsg->payload, sizeof(myMsg->payload));
-						sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, AM_BROADCAST_ADDR);
-						post sendBufferTask();
-						break;
+					dbg("genDebug", "Sending Ping Reply to %d! \n\n", myMsg->src);
+					dbg("Project2D","Running dijkstra\n");
+					dijkstra();
+					dbg("Project2D","END\n\n"); 
+					forwardTo = forwardPacketTo(&confirmedList,myMsg->src);
+					dbg("Project2F","Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+					makePack(&sendPackage, TOS_NODE_ID, myMsg->src, MAX_TTL, PROTOCOL_PINGREPLY, sequenceNum++, (uint8_t *) myMsg->payload, sizeof(myMsg->payload));					
+					sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src,forwardTo);
+					post sendBufferTask();
+					break;
 					case PROTOCOL_PINGREPLY:
-						if(!arrListContains(&Received, myMsg->src, myMsg->seq)){
+					if(!arrListContains(&Received, myMsg->src, myMsg->seq)){
 						dbg("Project1F", "--------------PING REPLY SRC:%d DEST:%d SEQ:%d--------------\n", myMsg->src, myMsg->dest, myMsg->seq);
 						dbg("genDebug", "Received a Ping Reply from %d!\n\n", myMsg->src);
 						temp1.seq = myMsg->seq;
 						temp1.src = myMsg->src;
 						arrListPushBack(&Received,temp1);
-						}
-						else
-							dbg("Project1F", "Ping reply duplicate, dropping\n\n");
-						
-						break;
+					}
+					else
+						dbg("Project1F", "Ping reply duplicate, dropping\n\n");
+	
+					break;
 					case PROTOCOL_CMD:
-							switch(getCMD((uint8_t *) &myMsg->payload, sizeof(myMsg->payload))){
-								uint32_t temp=0;
-								case CMD_PING:
-								    dbg("genDebug", "Ping packet received: %d \n", myMsg->seq);
-									memcpy(&createMsg, (myMsg->payload) + PING_CMD_LENGTH, sizeof(myMsg->payload) - PING_CMD_LENGTH);
-									memcpy(&dest, (myMsg->payload)+ PING_CMD_LENGTH-2, sizeof(uint8_t));
-									makePack(&sendPackage, TOS_NODE_ID, (dest-48)&(0x00FF), MAX_TTL, PROTOCOL_PING, sequenceNum++, (uint8_t *)createMsg,
-									sizeof(createMsg));	
-									
-									dbg("genDebug", "%d %d %s \n", sendPackage.src, sendPackage.dest, sendPackage.payload);
-									
-									//Place in Send Buffer
-									sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src,AM_BROADCAST_ADDR);
-									dbg("Project1F", "BroadCasting from %d SEQ#:%d DEST:%d \n", TOS_NODE_ID, myMsg->seq, sendPackage.dest);
-									post sendBufferTask();
-									break;
-								case CMD_KILL:
-									isActive = FALSE;
-									break;
-								case CMD_ERROR:
-									break;
-								default:
-									break;
-							}
+					switch(getCMD((uint8_t *) &myMsg->payload, sizeof(myMsg->payload))){
+						uint32_t temp=0;
+						case CMD_PING:
+						dbg("genDebug", "Ping packet received: %d \n", myMsg->seq);
+						dbg("genDebug", "Sending Ping Reply to %d! \n\n", myMsg->src);
+						
+						dbg("Project2D","Running dijkstra\n");
+						dijkstra();
+						dbg("Project2D","END\n\n"); 
+						
+						memcpy(&createMsg, (myMsg->payload) + PING_CMD_LENGTH, sizeof(myMsg->payload) - PING_CMD_LENGTH);
+						memcpy(&dest, (myMsg->payload)+ PING_CMD_LENGTH-2, sizeof(uint8_t));
+						makePack(&sendPackage, TOS_NODE_ID, (dest-48)&(0x00FF), MAX_TTL, PROTOCOL_PING, sequenceNum++, (uint8_t *)createMsg,
+								sizeof(createMsg));	
+	
+						dbg("genDebug", "%d %d %s \n", sendPackage.src, sendPackage.dest, sendPackage.payload);
+	
+						//Place in Send Buffer
+						forwardTo = forwardPacketTo(&confirmedList,sendPackage.dest);
+						dbg("Project2F","Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+						
+						sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src,forwardTo);
+						dbg("Project1F", "BroadCasting from %d SEQ#:%d DEST:%d \n", TOS_NODE_ID, myMsg->seq, sendPackage.dest);
+						post sendBufferTask();
 						break;
+						case CMD_KILL:
+						isActive = FALSE;
+						break;
+						case CMD_ERROR:
+						break;
+						default:
+						break;
+					}
+					break;
 					default:
-						break;
+					break;
 				}
 			}else if(TOS_NODE_ID==myMsg->src){
 				//dbg("cmdDebug", "Source is this node: %s\n", myMsg->payload);
@@ -224,93 +240,126 @@ implementation{
 				pair friendListInfo;
 				uint8_t *tempArray;
 				int i, j;
+				int difference; 
 				switch(myMsg->protocol){
 					case PROTOCOL_LINKSTATE:
-						if(!arrListContains(&lspTracker, myMsg->src, myMsg->seq)){
-							
-							if(arrListSize(&lspTracker) >= 30){
-								dbg("Project2L","Popping front");
-								pop_front(&lspTracker);	
-							}
-						
-							temp1.seq = myMsg->seq;
-							temp1.src = myMsg->src;
-							arrListPushBack(&lspTracker,temp1);
-								
-							tempArray = (uint8_t*)myMsg->payload;
-							dbg("Project2L","LINK STATE OF GREATNESS. FLOODING THE NETWORK from %d seq#: %d :< \n", myMsg->src, myMsg->seq);							
-						
-							for(i = 0; i < totalNodes; i++){
-								lspMAP[myMsg->src].cost[i] = tempArray[i];
-								if(tempArray[i] != -1 && tempArray[i] != 0)
-									dbg("Project2L", "Printing out src:%d  cost:%d \n", i , tempArray[i]);
-							}
-							
-							dbg("Project2L", "Making sure that it's copied correctly \n");
-							
-							for(i = 0; i < totalNodes; i++){
-								for(j = 0; j < totalNodes; j++){
-									if(lspMAP[i].cost[j] != -1 && lspMAP[i].cost[j] != 0)
-										dbg("Project2L","Soucrce: %d neighbor:%d cost: %d \n",i , j, lspMAP[i].cost[j]);
-								}
-							}
-							
-							dbg("Project2D","Running dijkstra\n");
-							dijkstra();
-							dbg("Project2D","END\n\n");
-
-							makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol, myMsg->seq, (uint8_t *) myMsg->payload, 20);
-							sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, AM_BROADCAST_ADDR);
-							post sendBufferTask();
-						
+					if(!arrListContains(&lspTracker, myMsg->src, myMsg->seq)){
+	
+						if(arrListSize(&lspTracker) >= 30){
+							dbg("Project2L","Popping front\n");
+							pop_front(&lspTracker);	
 						}
-						else{
-							dbg("Project2L", "Already received this packet from %d, will not flood. \n\n", myMsg->src);	
+	
+						temp1.seq = myMsg->seq;
+						temp1.src = myMsg->src;
+						arrListPushBack(&lspTracker,temp1);
+						tempArray = (uint8_t*)myMsg->payload;
+						lspMapinitialize(&lspMAP,myMsg->src);
+						dbg("Project2L","BEFORE!! src: %d seq#: %d :< \n", myMsg->src, myMsg->seq);
+						for(i = 0; i < totalNodes; i++){
+							if(tempArray[i] != -1 && tempArray[i] != 0)
+								dbg("Project2L", "Printing out src:%d neighbor:%d  cost:%d \n", myMsg->src, i , tempArray[i]);
+						}	
+						tempArray = (uint8_t*)myMsg->payload;
+						dbg("Project2L","LINK STATE OF GREATNESS. FLOODING THE NETWORK from %d seq#: %d :< \n", myMsg->src, myMsg->seq);								
+						for(i = 0; i < totalNodes; i++){
+							lspMAP[myMsg->src].cost[i] = tempArray[i];
+							if(tempArray[i] != -1 && tempArray[i] != 0)
+								dbg("Project2L", "Printing out src:%d neighbor:%d  cost:%d \n", myMsg->src, i , tempArray[i]);
 						}
-						
-						break;	
+						makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol, myMsg->seq, (uint8_t *) myMsg->payload, 20);
+						sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, AM_BROADCAST_ADDR);
+						post sendBufferTask();
+					}
+					else{
+						dbg("Project2L", "Already received this packet from %d, will not flood. \n\n", myMsg->src);	
+					}
+					break;	
 					case PROTOCOL_PING:
-							makePack(&sendPackage, TOS_NODE_ID, discoveryPacket, MAX_TTL, PROTOCOL_PINGREPLY, neighborSequenceNum++, (uint8_t *) myMsg->payload, sizeof(myMsg->payload));
-							sendBufferPushBack(&packBuffer, sendPackage, TOS_NODE_ID, myMsg->src);
-							dbg("Project1N", "Ping Received: I am ignoring you %d. \n", myMsg->src);
-							post sendBufferTask();
-						break;
+					//we dont' care about the receiving the ping reply when, we just want to send something.				
+					dbg("Project2N", "Sending PingReply seq#: %d src: %d \n",myMsg->seq,myMsg->src);
+					makePack(&sendPackage, TOS_NODE_ID, discoveryPacket, MAX_TTL, PROTOCOL_PINGREPLY, myMsg->seq, (uint8_t *) myMsg->payload, sizeof(myMsg->payload));
+					sendBufferPushBack(&packBuffer, sendPackage, TOS_NODE_ID, myMsg->src);
+					dbg("Project1N", "Ping Received: I am ignoring you %d. \n", myMsg->src);
+					post sendBufferTask();
+					break;
 					case PROTOCOL_PINGREPLY:
-						dbg("Project1N", "PingReply Received: That's mean :< %d. \n", myMsg->src);
-						if(!arrListContains(&friendList, myMsg->src, myMsg->seq)){
-							friendListInfo.seq = myMsg->seq;
-							friendListInfo.src = myMsg->src;
-							friendListInfo.timer = call neighborDiscoveryTimer.getNow();
-							if(arrListContainsKey(&friendList, myMsg->src)){
-								arrListReplace(&friendList,myMsg->src, myMsg->seq, friendListInfo.timer); //updates the current time of the node
-								dbg("Project1N", "---------------Updating my friendList---------------\n\n");
+					difference = 0;
+					//The packet drops usually happen in the pingreply section
+					dbg("Project1N", "PingReply Received: That's mean :< %d. \n", myMsg->src);
+					dbg("Project2N", "Received Ping reply seq#: %d \n", myMsg->seq);
+					if(!arrListContains(&friendList, myMsg->src, myMsg->seq)){
+						friendListInfo.seq = myMsg->seq;
+						friendListInfo.src = myMsg->src;
+						friendListInfo.timer = call neighborDiscoveryTimer.getNow();
+						if(arrListContainsKey(&friendList, myMsg->src)){
+							arrListReplace(&friendList,myMsg->src, myMsg->seq, friendListInfo.timer); //updates the current time of the node
+							dbg("Project1N", "---------------Updating my friendList---------------\n\n");
+						}
+						else
+							arrListPushBack(&friendList,friendListInfo);
+						dbg("Project1N", "NOT IN THE LIST, ADDING: Adding to my FriendList anyways T_T \n\n");
+						
+						//project 2 portion
+						if(lastSequenceTracker[myMsg->src] < myMsg->seq){
+							//calculate the cost of the link in here						
+							difference =  myMsg->seq -lastSequenceTracker[myMsg->src];
+							lastSequenceTracker[myMsg->src] = myMsg->seq;
+							if(myMsg->seq <= 1)
+								totalAverageEMA[myMsg->src] = EMA(1.0,1.0,1.0);		
+							else{									
+								totalAverageEMA[myMsg->src] = EMA(totalAverageEMA[myMsg->src],1,1/difference);			
 							}
-							else
-								arrListPushBack(&friendList,friendListInfo);
-							
-							dbg("Project1N", "NOT IN THE LIST, ADDING: Adding to my FriendList anyways T_T \n\n");
 						}
-						else{
-							dbg("Project1N", "Oh you're already in my FriendList? :D");
-						}
-						break;
+					}
+					else{
+						dbg("Project1N", "Oh you're already in my FriendList? :D");
+					}
+					break;
 					default:
-						dbg("Project1N", "I should never get here, I hope. \n");
-						break;	
+					dbg("Project1N", "I should never get here, I hope. \n");
+					break;	
 				}
-				 
+ 
 			}
 			else{
+				int forwardTo;
+				dbg("Project2D","Running dijkstra\n");
+				dijkstra();
+				dbg("Project2D","END\n\n"); 
+				forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
+				dbg("Project2F","Forwarding to %d and src is %d \n", forwardTo, myMsg->src);
+				if(forwardTo == 0) printCostList(&lspMAP, TOS_NODE_ID);
+				if(forwardTo == -1){
+					dbg("Project2F", "rechecking \n");
+					dijkstra();
+					forwardTo = forwardPacketTo(&confirmedList,myMsg->dest);
+					if(forwardTo == -1)
+						dbg("Project2F", "Dropping for reals\n");
+					else{
+						makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol, myMsg->seq, (uint8_t *) myMsg->payload, sizeof(myMsg->payload));
+						sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, forwardTo);
+						post sendBufferTask();
+					}
+				}
+				else{
+					makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol, myMsg->seq, (uint8_t *) myMsg->payload, sizeof(myMsg->payload));
+					sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, forwardTo);
+					post sendBufferTask();
+				}
+				
+				//used in project1
+				/*
 				dbg("Project1F","I AM A PACKET FOR BROADCASTING \n");
 				if(!arrListContains(&Received, myMsg->src, myMsg->seq)){
 					if(arrListSize(&Received) >= 29){
 						dbg("Project1F","Popping front");
-						pop_front(&Received);	
+						pop_front(&Received);
 					}
-					
+	
 					makePack(&sendPackage, myMsg->src, myMsg->dest, myMsg->TTL-1, myMsg->protocol, myMsg->seq, (uint8_t *) myMsg->payload, sizeof(myMsg->payload));
 					sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, AM_BROADCAST_ADDR);
-					
+	
 					temp1.seq = myMsg->seq;
 					temp1.src = myMsg->src;
 					arrListPushBack(&Received,temp1);
@@ -319,12 +368,12 @@ implementation{
 					dbg("Project1F", "Broadcasting\n\n");
 				}
 				else{
-					
+	
 					dbg("Project1F", "DROPPING packets with src:%d seq:%d \n", myMsg->src, myMsg->seq);
 					temp1 = back(&Received);
 					dbg("Project1F", "Size is %d seq# of last is %d\n\n",arrListSize(&Received), temp2.seq);
-					}
-				
+				}
+				*/
 			}		
 			return msg;
 		}
@@ -339,23 +388,23 @@ implementation{
 			info = sendBufferPopFront(&packBuffer);
 			send(info.src,info.dest, &(info.packet));
 		}
-		
+	
 		if(packBuffer.size !=0 && !busy){
 			post sendBufferTask();
 		}
 	}
 
 	/*
-	* Send a packet
-	*
-	*@param
-	*	src - source address
-	*	dest - destination address
-	*	msg - payload to be sent
-	*
-	*@return
-	*	error_t - Returns SUCCESS, EBUSY when the system is too busy using the radio, or FAIL.
-	*/
+	 * Send a packet
+	 *
+	 *@param
+	 *	src - source address
+	 *	dest - destination address
+	 *	msg - payload to be sent
+	 *
+	 *@return
+	 *	error_t - Returns SUCCESS, EBUSY when the system is too busy using the radio, or FAIL.
+	 */
 	
 	// use this function for broadcasting?
 	
@@ -392,111 +441,110 @@ implementation{
 	}
 
 
-//---- additional functions	
-//---- Project 1 Implementations
+	//---- additional functions
+	//---- Project 1 Implementations
 
 	void neighborDiscoveryPacket(){
-				
+	
 		pack discoveryPackage;
 		uint8_t createMsg[PACKET_MAX_PAYLOAD_SIZE];
 		uint16_t dest;
-		
+	
 		memcpy(&createMsg, "", sizeof(PACKET_MAX_PAYLOAD_SIZE));
 		memcpy(&dest, "", sizeof(uint8_t));
+		dbg("Project2N", "Sending seq#: %d\n", neighborSequenceNum);
 		makePack(&sendPackage, TOS_NODE_ID, discoveryPacket, MAX_TTL, PROTOCOL_PING, neighborSequenceNum++, (uint8_t *)createMsg,
-		sizeof(createMsg));	
-		
+				sizeof(createMsg));	
+	
 		dbg("Project1N", "Hi, is anyone there? :D \n");
 		sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, discoveryPacket);
-		
+	
 		post sendBufferTask();
 	
 	}	
 
 	//Checks for the node time out
-	void arrListRemove(arrlist *list,uint32_t iTimer){
+	bool arrListRemove(arrlist *list, uint32_t iTimer){
 		uint8_t i;
 		uint8_t j;
-		for(i = 0; i<=list->numValues; i++){
-			//printf("%d > %d \n", iTimer, list->values[i].timer);
-			if(iTimer >= list->values[i].timer && list->values[i].timer != 0){
-				dbg("Project1N","Removing %d from friendList, last seen at time %d. Time removed: %d \n", list->values[i].src, list->values[i].timer, iTimer);
-				
-				if(list->numValues > 1){
-					list->values[i] = list->values[list->numValues-1];		
-					list->numValues--;
-					i--;
-				}
-				else
-					list->numValues = 0;
+		double timeOut;
+		bool success = FALSE;
+		for(i = 0; i <list->numValues; i++){
+			timeOut = iTimer - list->values[i].timer;
+			if(list->values[i].timer + 50000 < iTimer ){
+				dbg("Project2test","Removing %d from friendList, last seen at time %d. Time removed: %d \n", list->values[i].src, list->values[i].timer, iTimer);	
+				list->values[i] = list->values[list->numValues-1];
+				list->numValues--;
+				i--;
+				success =  TRUE;
 			}
 		}
-	
+		return success;
 	}
 	
 	void arrPrintList(arrlist* list){
 		uint8_t i;
 		for(i = 0; i<list->numValues; i++){
-			dbg("Project1N","I think I am friends with %d and the last time we met was %d \n", list->values[i].src, list->values[i].timer);
+			dbg("Project2test","I think I am friends with %d and the last time we met was %d \n", list->values[i].src, list->values[i].timer);
 		}	
 	}
 
-//---- END OF PROJECT 1 IMPLEMENTATIONS
+	//---- END OF PROJECT 1 IMPLEMENTATIONS
 
-//---- PROJECT 2 IMPLEMENTATIONS
+	//---- PROJECT 2 IMPLEMENTATIONS
 	void printlspMap(lspMap *list){
 		int i,j;
-		for(i = 0; i < 5; i++){
-			for(j = 0; j < 5; j++){
+		for(i = 0; i < totalNodes; i++){
+			for(j = 0; j < totalNodes; j++){
 				if(list[i].cost[j] != 0 && list[i].cost[j] != -1)
 					dbg("Project2L", "src: %d  neighbor: %d cost: %d \n", i, j, list[i].cost[j]);
 			}	
 		}
 		dbg("Project2L", "END \n\n");
 	}
+	
+	void printCostList(lspMap *list, uint8_t nodeID) {
+		uint8_t i;
+		for(i = 0; i < totalNodes; i++) {
+			dbg("genDebug", "From %d To %d Costs %d", nodeID, i, list[nodeID].cost[i]);
+		}
+	}
 
 	void lspNeighborDiscoveryPacket(){
 	
 		pack discoveryPackage;
-		uint8_t createMsg[PACKET_MAX_PAYLOAD_SIZE];
 		uint16_t dest;
 		int i, j;
-		int cost = 1;
+		uint8_t lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};	
 		lspMapinitialize(&lspMAP,TOS_NODE_ID);
+
 		//this needs to be changed for the extra credit
 		//Currently, it assumes that the cost will always be 1 if it's a neighbor
 		//Will need to make function that will determine the cost depending on the reliability of the connection between 2 nodes
 		//WIll probably use the broadcast neighbor discovery as a way to check the reliability		
+		cost[0] = 1;	
 		
 		for(i = 0; i < friendList.numValues; i++){
-			lspCostList[friendList.values[i].src] = cost;
-			//puts the neighbor into the MAP
-			lspMAP[TOS_NODE_ID].cost[friendList.values[i].src] = cost;
-			dbg("Project2L", "Priting neighbors: %d %d\n",friendList.values[i].src, lspCostList[friendList.values[i].src]);	
+			if(1/totalAverageEMA[friendList.values[i].src]*10 < 255){
+				lspCostList[friendList.values[i].src] = 1/totalAverageEMA[friendList.values[i].src]*10;
+				dbg("Project2test", "Cost to %d is %d %f %f\n", friendList.values[i].src, lspCostList[friendList.values[i].src], 1/totalAverageEMA[friendList.values[i].src]*10,totalAverageEMA[friendList.values[i].src]);
+				//puts the neighbor into the MAP
+				lspMAP[TOS_NODE_ID].cost[friendList.values[i].src] = 1/totalAverageEMA[friendList.values[i].src]*10;
+				dbg("Project2L", "Priting neighbors: %d %d\n",friendList.values[i].src, lspCostList[friendList.values[i].src]);
+			}
+			else
+				dbg("Project2test", "Cost is too big, %d is not my neighbor yet. \n", friendList.values[i].src);
 		}
-		
-	 	/*
-	 	dbg("Project2L", "Printing out the neighbors. \n");
-		
-		for(j = 0; j < totalNodes; j++)
-			dbg("Project2L", "neighbor:%d cost:%d \n", j,lspCostList[j]);
-		*/
-		//memcpy(&createMsg, &lspCostList[20], 20);
-		
-	
 		memcpy(&dest, "", sizeof(uint8_t));	
 		makePack(&sendPackage, TOS_NODE_ID, discoveryPacket, MAX_TTL, PROTOCOL_LINKSTATE, linkSequenceNum++, (uint8_t *)lspCostList, 20);	
 		sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, discoveryPacket);	
-		
 		post sendBufferTask();
 		dbg("Project2L", "Sending LSPs EVERYWHERE \n");	
 		dbg("Project2L", "END \n\n");
-		
+	
 	}
 	
-	
-	//Still unsure how to do this but will try it out anyways.
-	/*The pseudo code:
+	/**The pseudo code:
 	 * 		M = {s}
 	 * 		for each n in N - {s}
 	 * 			C(n) = l(s,n)
@@ -513,28 +561,22 @@ implementation{
 	 *		• C(i): Cost of the path from s to i.
 	 * 
 	 */
-	
 	void dijkstra(){
-		int numOfConsidered = 0;
 		int i;	
 		lspTuple lspTup;
 		lspTuple temp;
 		lspTuple tupleCostCheck;
 		lspSrc temp2;
 		int lspTupNum;
-		int totalCost;
-		int confirmedNode[totalNodes];
 		int neighborCheck;
 		lspTableinit(&tentativeList);
 		lspTableinit(&confirmedList);
 		temp.dest = TOS_NODE_ID;
 		temp.nodeNcost = 0;
 		temp.nextHop = TOS_NODE_ID;
-		totalCost = 1;
-		numOfConsidered++;
-		
+	
 		dbg("Project2D","start of dijkstra \n");
-		dbg("Project2D","PushBack from confirmedList \n");
+		dbg("Project2D","PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
 		lspTablePushBack(&confirmedList, temp);
 		//cost of path from this node to node i
 		//is the same as lspMap[TOS_NODE_ID].cost[i]
@@ -544,107 +586,67 @@ implementation{
 				temp.nextHop = i;
 				temp.nodeNcost = lspMAP[TOS_NODE_ID].cost[i];
 				temp.dest = i;
-				dbg("Project2D","PushBack from tentativeList \n");
+				dbg("Project2D","PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
 				lspTablePushBack(&tentativeList, temp);	
 			}
 		}
-
-		/*
- 		* 
-		while(TRUE){
-			dbg("Project2D","I am the while loop! \n");
-			if(lspTableIsEmpty(&tentativeList)){
-				break;
-			}
-			temp2 = lspTableMinCost(&tentativeList);
-			lspTupNum = temp2.src;
-			lspTup = lspTableRemove(&tentativeList, temp2.indexNumber);
-			//lspTablePushBack(&confirmedList,lspTup);
-			
-			if(!lspTableContains(&confirmedList, lspTup.nextHop)){
-				
-				dbg("Project2D", "confirm pushback \n");
-				lspTablePushBack(&confirmedList,lspTup);
-				for(i = 0; i < totalNodes; i++){
-						//dbg("Project2D", "Checking the FOR LOOP! src:%d node#:%d %d \n", lspTupNum, i, lspMAP[lspTupNum].cost[i]);
-					if(lspMAP[lspTupNum].cost[i] != 255 && lspMAP[lspTupNum].cost[i] != 0){
-						//dbg("Project2D", "Checking the loop! src:%d node#:%d %d \n", lspTupNum, i, lspMAP[lspTupNum].cost[i]+lspTup.nodeNcost);
-						
-						if(lspTableContains(&tentativeList,i)){
-							dbg("Project2D", "I have this already but not sure about the cost. dest:%d nextHope:%d\n", i , lspTup.nextHop);
-							lspTableReplace(&tentativeList, lspTup, lspMAP[lspTupNum].cost[i]+lspTup.nodeNcost);
-						}
-						else if(i == TOS_NODE_ID){
-							//dbg("Project2D", "The destination is me. \n");
-						}
-						else{
-							temp.nextHop = lspTupNum;
-							temp.nodeNcost = lspMAP[lspTupNum].cost[i]+lspTup.nodeNcost;
-							temp.dest = i;
-							lspTablePushBack(&tentativeList, temp);
-						}
-					}
-				}
-			}
-			else{
-			
-			}
-			dbg("Project2D", "Printing the tentativeList! \n");
-			for(i = 0; i < tentativeList.numValues; i++){
-				dbg("Project2D", "dest:%d cost:%d nextHop:%d \n",tentativeList.lspTuples[i].dest,tentativeList.lspTuples[i].nodeNcost,tentativeList.lspTuples[i].nextHop);
-			
-			}
-		}
-		*/
-		
-		 while(!lspTableIsEmpty(&tentativeList)){
-		 //	dbg("Project2D","In the While loop \n");
+		while(!lspTableIsEmpty(&tentativeList)){
 			temp2 = lspTableMinCost(&tentativeList);
 			lspTupNum = temp2.src;
 			lspTup = lspTableRemove(&tentativeList, temp2.indexNumber);
 			dbg("Project2D","PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", lspTup.dest,lspTup.nodeNcost, lspTup.nextHop);
 			if(!lspTableContainsDest(&confirmedList, lspTup.dest))
 				lspTablePushBack(&confirmedList,lspTup);
-			neighborCheck = lspTup.dest;
-			//confirmedNode[temp2.src] = 1;
-				
+			neighborCheck = lspTup.dest;	
 			for(i = 0; i < totalNodes; i++){
-				//dbg("Project2D", "Looping through %d \n", i);
 				//dbg("Project2D", "Printing out the list neighbor:%d src:%d cost:%d \n",i, neighborCheck, lspMAP[neighborCheck].cost[i]);
-				if(lspMAP[neighborCheck].cost[i] != 255 && lspMAP[neighborCheck].cost[i] != 0){
-					//if(i != lspTupNum){
-						//dbg("Projecg2D", "I get in here");						
-						temp.nextHop = lspTupNum;
-						temp.nodeNcost = lspMAP[neighborCheck].cost[i]+lspTup.nodeNcost;
-						temp.dest = i;
-						if(lspTupleReplace(&tentativeList,temp,lspMAP[neighborCheck].cost[i]+lspTup.nodeNcost)){
-							dbg("Project2D","Replace from tentativeList  dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
+				if(lspMAP[neighborCheck].cost[i] != 255 && lspMAP[neighborCheck].cost[i] != 0){	
+					temp.nextHop = lspTupNum;
+					temp.nodeNcost = lspMAP[neighborCheck].cost[i]+lspTup.nodeNcost;
+					temp.dest = i;
+					if(lspTupleReplace(&tentativeList,temp,lspMAP[neighborCheck].cost[i]+lspTup.nodeNcost)){
+						dbg("Project2D","Replace from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
+					}
+					else
+						if(!lspTableContainsDest(&confirmedList, i)){
+							dbg("Project2D","PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
+							lspTablePushBack(&tentativeList, temp);
 						}
-						else
-							if(!lspTableContainsDest(&confirmedList, i)){
-							dbg("Project2D","PushBack from tentativeList  dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
-								lspTablePushBack(&tentativeList, temp);
-							}
-				//	}
 				}
-				//else
-					//dbg("Project2D", "what? \n");
 			}
 		}
-		 
-		 
-		 
-		 
 		dbg("Project2D", "Printing the routing table! \n");
 		for(i = 0; i < confirmedList.numValues; i++){
 			dbg("Project2D", "dest:%d cost:%d nextHop:%d \n",confirmedList.lspTuples[i].dest,confirmedList.lspTuples[i].nodeNcost,confirmedList.lspTuples[i].nextHop);
 		}
-		dbg("Project2D", "End of dijkstra! \n");		
-	
+		dbg("Project2D", "End of dijkstra! \n");	
 	}
 
-	void forwardPacket(){
+	int forwardPacketTo(lspTable* list, int dest){	
+		return lspTableLookUp(list,dest);
+	}
+	
+	void costCalculator(int lastSequence, int currentSequence){
+		//It loops through the difference of the sequences
+		int difference, i;
+		float totalAverageEMA;
+		difference =  currentSequence -lastSequence;
 		
+		if(currentSequence <= 1){
+			totalAverageEMA = EMA(1.0,1.0,1.0);		
+		}
+			
+	}
+	/**
+	 * let S_1 = Y_1
+	 * Exponential Moving Average
+	 * S_t = alpha*Y_t + (1-alpha)*S_(t-1)
+	 */	
+	float EMA(float prevEMA, float now,float weight){
+		float alpha = 0.5*weight;
+		float averageEMA = alpha*now + (1-alpha)*prevEMA;
+	
+		return averageEMA;
 	}
 	
 }

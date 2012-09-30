@@ -25,6 +25,8 @@ typedef struct lspSrc{
 
 void lspTableinit(lspTable* list){
 	int i;
+	for(i = 0; i < MAXNODES; i++)
+		list->lspTuples[i].nodeNcost = -1;
 	list->numValues = 0;
 }
 
@@ -73,7 +75,7 @@ lspTuple lspTableGet(lspTable* list, int node){
 	for(i = 0; i<list->numValues; i++){
 		if(node == list->lspTuples[i].dest) return list->lspTuples[i];
 	}
-	printf("It should never get here \n");
+	//printf("It should never get here \n");
 	return derp;
 }
 
@@ -81,7 +83,7 @@ bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost){
 	int i;
 	for(i = 0; i<list->numValues; i++){
 		if(cost < list->lspTuples[i].nodeNcost && newTuple.dest == list->lspTuples[i].dest){
-			printf("found a pair \n");
+			//printf("found a pair \n");
 			list->lspTuples[i].dest = newTuple.dest;
 			list->lspTuples[i].nodeNcost = cost;
 			list->lspTuples[i].nextHop = newTuple.nextHop;
@@ -125,8 +127,17 @@ lspSrc lspTableMinCost(lspTable* cur){
 	}
 	temp2.src = cur->lspTuples[minNode].nextHop;
 	temp2.indexNumber = minNode;
-	printf("min node is %d  dest:%d cost:%d nextHop:%d \n", minNode,cur->lspTuples[minNode].dest,cur->lspTuples[minNode].nodeNcost,cur->lspTuples[minNode].nextHop );
+	//printf("min node is %d  dest:%d cost:%d nextHop:%d \n", minNode,cur->lspTuples[minNode].dest,cur->lspTuples[minNode].nodeNcost,cur->lspTuples[minNode].nextHop );
 	return temp2;
+}
+
+int lspTableLookUp(lspTable* list, int dest){
+	int i;
+	for(i = 0; i < list->numValues; i++){
+		if(list->lspTuples[i].dest == dest)
+			return list->lspTuples[i].nextHop;
+	}
+	return -1;
 }
 
 //Creates a Map of all the Nodes

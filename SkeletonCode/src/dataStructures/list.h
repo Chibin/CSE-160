@@ -94,6 +94,17 @@ bool arrListContainsKey(arrlist* list, uint8_t iSrc){
 	return FALSE;
 }
 
+dataType arrListGetPair(arrlist* list, uint8_t iSrc){
+	uint8_t i=0;
+	pair derp;
+	for(i; i<list->numValues; i++){
+		if(iSrc == list->values[i].src) return list->values[i];
+	}
+	derp.timer = 0;
+	return derp;
+	
+}
+
 void arrListReplace(arrlist *list, uint8_t iSrc, uint8_t iSeq, uint32_t iTimer){
 		uint8_t i;
 	for(i = 0; i<list->numValues; i++){
