@@ -739,7 +739,7 @@ extern void *malloc(size_t __size) __attribute((__nothrow__)) __attribute((__mal
 #line 488
 extern void free(void *__ptr) __attribute((__nothrow__)) ;
 #line 737
-typedef int (*__compar_fn_t)(const void *arg_0x2b4e4a3556b0, const void *arg_0x2b4e4a355988);
+typedef int (*__compar_fn_t)(const void *arg_0x2b8e43ba26b0, const void *arg_0x2b8e43ba2988);
 #line 771
 __extension__ 
 #line 788
@@ -757,7 +757,7 @@ extern double sqrt(double __x) __attribute((__nothrow__)) ;
 #line 185
 extern double floor(double __x) __attribute((__nothrow__)) __attribute((const)) ;
 #line 251
-extern double erfc(double arg_0x2b4e4a3cc060) __attribute((__nothrow__)) ;
+extern double erfc(double arg_0x2b8e43c19060) __attribute((__nothrow__)) ;
 # 202 "/usr/include/math.h" 3
 enum __nesc_unnamed4260 {
 
@@ -1132,8 +1132,8 @@ typedef struct hashtable hashtable_t;
 #line 78
 struct hashtable *
 create_hashtable(unsigned int minsize, 
-unsigned int (*hashfunction)(void *arg_0x2b4e4a6096a8), 
-int (*key_eq_fn)(void *arg_0x2b4e4a609e20, void *arg_0x2b4e4a607100));
+unsigned int (*hashfunction)(void *arg_0x2b8e43e566a8), 
+int (*key_eq_fn)(void *arg_0x2b8e43e56e20, void *arg_0x2b8e43e54100));
 #line 103
 #line 102
 int 
@@ -1169,7 +1169,7 @@ typedef struct sim_log_channel {
 } sim_log_channel_t;
 
 enum __nesc_unnamed4269 {
-  SIM_LOG_OUTPUT_COUNT = 263U
+  SIM_LOG_OUTPUT_COUNT = 262U
 };
 
 sim_log_output_t outputs[SIM_LOG_OUTPUT_COUNT];
@@ -1748,7 +1748,7 @@ struct tm;
 
 struct tm;
 # 46 "/home/maru/local/tinyos-2.1.1/tos/lib/tossim/randomlib.h"
-static inline void RandomInitialise(int arg_0x2b4e4a8000c8, int arg_0x2b4e4a800330);
+static inline void RandomInitialise(int arg_0x2b8e4404d0c8, int arg_0x2b8e4404d330);
 static double RandomUniform(void );
 # 51 "/home/maru/local/tinyos-2.1.1/tos/lib/tossim/sim_noise.c"
 int numCase1 = 0;
@@ -3434,8 +3434,8 @@ static inline sendInfo sendBufferPopFront(sendBuffer *buffer);
 static void sendBufferPushBack(sendBuffer *buff, pack packet, uint16_t src, uint16_t dest);
 # 7 "/home/maru/workspace1/SkeletonCode/src/dataStructures/arrTimerList.h"
 typedef pair timerDataType;
-# 12 "/home/maru/workspace1/SkeletonCode/src/dataStructures/lspTable.h"
-#line 8
+# 11 "/home/maru/workspace1/SkeletonCode/src/dataStructures/lspTable.h"
+#line 7
 typedef struct lspTuple {
   uint8_t dest;
   uint8_t nodeNcost;
@@ -3447,7 +3447,7 @@ typedef struct lspTuple {
 
 
 
-#line 14
+#line 13
 typedef struct lspTable {
 
   lspTuple lspTuples[20];
@@ -3458,7 +3458,7 @@ lspTable;
 
 
 
-#line 21
+#line 20
 typedef struct lspSrc {
   uint8_t src;
   uint8_t indexNumber;
@@ -3471,33 +3471,39 @@ static void lspTableinit(lspTable *list);
 
 
 
-static bool lspTablePushBack(lspTable *cur, lspTuple newVal);
-
-
-
-
-
-
-
-
-static inline bool lspTableIsEmpty(lspTable *cur);
-#line 59
-static bool lspTableContainsDest(lspTable *list, int node);
-#line 82
 static inline bool lspTupleReplace(lspTable *list, lspTuple newTuple, int cost);
-#line 96
-static inline lspTuple lspTableRemove(lspTable *list, int node);
-#line 116
-static inline lspSrc lspTableMinCost(lspTable *cur);
-#line 134
-static int lspTableLookUp(lspTable *list, int dest);
-#line 148
-#line 144
-typedef struct lspMap {
+#line 45
+static bool lspTablePushBack(lspTable *cur, lspTuple newVal);
+#line 59
+static inline bool lspTableIsEmpty(lspTable *cur);
 
+
+
+
+
+
+
+static inline bool lspTableContains(lspTable *list, int node);
+
+
+
+
+
+
+
+
+static inline bool lspTableContainsDest(lspTable *list, int node);
+#line 95
+static inline lspTuple lspTableRemove(lspTable *list, int node);
+#line 115
+static inline lspTuple lspSrcGetMinCost(lspTable *cur);
+#line 133
+static int lspTableLookUp(lspTable *list, int dest);
+#line 145
+#line 143
+typedef struct lspMap {
   uint8_t cost[20];
-} 
-lspMap;
+} lspMap;
 
 static void lspMapinitialize(lspMap *list, int TOS_NODE_ID);
 # 9 "/home/maru/workspace1/SkeletonCode/src/dataStructures/pingInfo.h"
@@ -3851,11 +3857,11 @@ static error_t MeasureClockC$Init$init(void );
 # 67 "/home/maru/local/tinyos-2.1.1/tos/interfaces/TaskBasic.nc"
 static error_t SimSchedulerBasicP$TaskBasic$postTask(
 # 49 "/home/maru/local/tinyos-2.1.1/tos/lib/tossim/SimSchedulerBasicP.nc"
-uint8_t arg_0x2b4e4a914ab0);
+uint8_t arg_0x2b8e44161ab0);
 # 75 "/home/maru/local/tinyos-2.1.1/tos/interfaces/TaskBasic.nc"
 static void SimSchedulerBasicP$TaskBasic$default$runTask(
 # 49 "/home/maru/local/tinyos-2.1.1/tos/lib/tossim/SimSchedulerBasicP.nc"
-uint8_t arg_0x2b4e4a914ab0);
+uint8_t arg_0x2b8e44161ab0);
 # 57 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Scheduler.nc"
 static void SimSchedulerBasicP$Scheduler$init(void );
 
@@ -3885,7 +3891,7 @@ static long long int SimMoteP$SimMote$getStartTime(void );
 # 80 "/home/maru/local/tinyos-2.1.1/tos/interfaces/AMSend.nc"
 static error_t TossimActiveMessageC$AMSend$send(
 # 47 "/home/maru/local/tinyos-2.1.1/tos/lib/tossim/TossimActiveMessageC.nc"
-am_id_t arg_0x2b4e4ac2d220, 
+am_id_t arg_0x2b8e4447a220, 
 # 80 "/home/maru/local/tinyos-2.1.1/tos/interfaces/AMSend.nc"
 am_addr_t addr, 
 #line 71
@@ -3908,7 +3914,7 @@ message_t *
 
 TossimActiveMessageC$Snoop$default$receive(
 # 49 "/home/maru/local/tinyos-2.1.1/tos/lib/tossim/TossimActiveMessageC.nc"
-am_id_t arg_0x2b4e4ac2a020, 
+am_id_t arg_0x2b8e44477020, 
 # 71 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Receive.nc"
 message_t * msg, 
 void * payload, 
@@ -3955,7 +3961,7 @@ message_t *
 
 TossimActiveMessageC$Receive$default$receive(
 # 48 "/home/maru/local/tinyos-2.1.1/tos/lib/tossim/TossimActiveMessageC.nc"
-am_id_t arg_0x2b4e4ac2c340, 
+am_id_t arg_0x2b8e44479340, 
 # 71 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Receive.nc"
 message_t * msg, 
 void * payload, 
@@ -4167,15 +4173,15 @@ static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC$0$TimerFrom$fire
 #line 136
 static uint32_t /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC$0$Timer$getNow(
 # 48 "/home/maru/local/tinyos-2.1.1/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x2b4e4b268c28);
+uint8_t arg_0x2b8e44abfc28);
 # 83 "/home/maru/local/tinyos-2.1.1/tos/lib/timer/Timer.nc"
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC$0$Timer$default$fired(
 # 48 "/home/maru/local/tinyos-2.1.1/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x2b4e4b268c28);
+uint8_t arg_0x2b8e44abfc28);
 # 64 "/home/maru/local/tinyos-2.1.1/tos/lib/timer/Timer.nc"
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC$0$Timer$startPeriodic(
 # 48 "/home/maru/local/tinyos-2.1.1/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x2b4e4b268c28, 
+uint8_t arg_0x2b8e44abfc28, 
 # 64 "/home/maru/local/tinyos-2.1.1/tos/lib/timer/Timer.nc"
 uint32_t dt);
 # 82 "/home/maru/local/tinyos-2.1.1/tos/lib/timer/Counter.nc"
@@ -4204,7 +4210,7 @@ error_t error);
 # 110 "/home/maru/local/tinyos-2.1.1/tos/interfaces/AMSend.nc"
 static void /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$AMSend$sendDone(
 # 48 "/home/maru/local/tinyos-2.1.1/tos/system/AMQueueImplP.nc"
-am_id_t arg_0x2b4e4b32a488, 
+am_id_t arg_0x2b8e44b80488, 
 # 103 "/home/maru/local/tinyos-2.1.1/tos/interfaces/AMSend.nc"
 message_t * msg, 
 
@@ -4217,7 +4223,7 @@ error_t error);
 # 75 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Send.nc"
 static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$Send$send(
 # 46 "/home/maru/local/tinyos-2.1.1/tos/system/AMQueueImplP.nc"
-uint8_t arg_0x2b4e4b32b318, 
+uint8_t arg_0x2b8e44b37318, 
 # 67 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Send.nc"
 message_t * msg, 
 
@@ -4231,7 +4237,7 @@ uint8_t len);
 #line 100
 static void /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$Send$default$sendDone(
 # 46 "/home/maru/local/tinyos-2.1.1/tos/system/AMQueueImplP.nc"
-uint8_t arg_0x2b4e4b32b318, 
+uint8_t arg_0x2b8e44b37318, 
 # 96 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Send.nc"
 message_t * msg, 
 
@@ -4286,7 +4292,7 @@ int sim_main_start_mote(void )   ;
 # 75 "/home/maru/local/tinyos-2.1.1/tos/interfaces/TaskBasic.nc"
 static void SimSchedulerBasicP$TaskBasic$runTask(
 # 49 "/home/maru/local/tinyos-2.1.1/tos/lib/tossim/SimSchedulerBasicP.nc"
-uint8_t arg_0x2b4e4a914ab0);
+uint8_t arg_0x2b8e44161ab0);
 
 
 
@@ -4454,7 +4460,7 @@ static am_addr_t TossimActiveMessageC$amAddress(void );
 # 110 "/home/maru/local/tinyos-2.1.1/tos/interfaces/AMSend.nc"
 static void TossimActiveMessageC$AMSend$sendDone(
 # 47 "/home/maru/local/tinyos-2.1.1/tos/lib/tossim/TossimActiveMessageC.nc"
-am_id_t arg_0x2b4e4ac2d220, 
+am_id_t arg_0x2b8e4447a220, 
 # 103 "/home/maru/local/tinyos-2.1.1/tos/interfaces/AMSend.nc"
 message_t * msg, 
 
@@ -4473,7 +4479,7 @@ message_t *
 
 TossimActiveMessageC$Snoop$receive(
 # 49 "/home/maru/local/tinyos-2.1.1/tos/lib/tossim/TossimActiveMessageC.nc"
-am_id_t arg_0x2b4e4ac2a020, 
+am_id_t arg_0x2b8e44477020, 
 # 71 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Receive.nc"
 message_t * msg, 
 void * payload, 
@@ -4492,7 +4498,7 @@ message_t *
 
 TossimActiveMessageC$Receive$receive(
 # 48 "/home/maru/local/tinyos-2.1.1/tos/lib/tossim/TossimActiveMessageC.nc"
-am_id_t arg_0x2b4e4ac2c340, 
+am_id_t arg_0x2b8e44479340, 
 # 71 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Receive.nc"
 message_t * msg, 
 void * payload, 
@@ -4899,14 +4905,14 @@ static void Node$lspTimer$startPeriodic(uint32_t dt);
 static uint32_t Node$pingTimeoutTimer$getNow(void );
 #line 64
 static void Node$pingTimeoutTimer$startPeriodic(uint32_t dt);
-# 97 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 95 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 enum Node$__nesc_unnamed4336 {
-#line 97
+#line 95
   Node$sendBufferTask = 3U
 };
-#line 97
+#line 95
 typedef int Node$__nesc_sillytask_sendBufferTask[Node$sendBufferTask];
-#line 46
+#line 44
 uint16_t Node$sequenceNum[1000];
 uint16_t Node$neighborSequenceNum[1000];
 int Node$totalNodes[1000];
@@ -4919,7 +4925,7 @@ lspTable Node$confirmedList[1000];
 lspTable Node$tentativeList[1000];
 lspMap Node$lspMAP[1000][20];
 arrlist Node$lspTracker[1000];
-float Node$cost[1000][20];
+
 int Node$lastSequenceTracker[1000][20];
 float Node$totalAverageEMA[1000][20];
 
@@ -4967,7 +4973,7 @@ static inline void Node$Boot$booted(void );
 
 
 static inline void Node$AMControl$startDone(error_t err);
-#line 117
+#line 115
 static inline void Node$AMControl$stopDone(error_t err);
 
 static inline void Node$pingTimeoutTimer$fired(void );
@@ -5008,19 +5014,19 @@ static inline void Node$AMSend$sendDone(message_t *msg, error_t error);
 
 
 static inline message_t *Node$Receive$receive(message_t *msg, void *payload, uint8_t len);
-#line 385
+#line 382
 static inline void Node$sendBufferTask$runTask(void );
-#line 411
+#line 408
 static inline error_t Node$send(uint16_t src, uint16_t dest, pack *message);
-#line 434
+#line 431
 static void Node$makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t *payload, uint8_t length);
-#line 447
+#line 444
 static inline void Node$neighborDiscoveryPacket(void );
-#line 467
+#line 464
 static inline bool Node$arrListRemove(arrlist *list, uint32_t iTimer);
-#line 485
+#line 482
 static inline void Node$arrPrintList(arrlist *list);
-#line 506
+#line 503
 static inline void Node$printCostList(lspMap *list, uint8_t nodeID);
 
 
@@ -5029,11 +5035,11 @@ static inline void Node$printCostList(lspMap *list, uint8_t nodeID);
 
 
 static inline void Node$lspNeighborDiscoveryPacket(void );
-#line 564
+#line 554
 static void Node$dijkstra(void );
-#line 625
+#line 584
 static inline int Node$forwardPacketTo(lspTable *list, int dest);
-#line 645
+#line 604
 static float Node$EMA(float prevEMA, float now, float weight);
 # 52 "/home/maru/local/tinyos-2.1.1/tos/system/RandomMlcgC.nc"
 uint32_t RandomMlcgC$seed[1000];
@@ -5366,7 +5372,7 @@ static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC$0$TimerFrom$stop
 
 static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC$0$Timer$fired(
 # 48 "/home/maru/local/tinyos-2.1.1/tos/lib/timer/VirtualizeTimerC.nc"
-uint8_t arg_0x2b4e4b268c28);
+uint8_t arg_0x2b8e44abfc28);
 #line 71
 enum /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC$0$__nesc_unnamed4339 {
 #line 71
@@ -5485,7 +5491,7 @@ static inline void /*NodeC.AMSenderC.SenderC.AMQueueEntryP*/AMQueueEntryP$0$Send
 # 80 "/home/maru/local/tinyos-2.1.1/tos/interfaces/AMSend.nc"
 static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$AMSend$send(
 # 48 "/home/maru/local/tinyos-2.1.1/tos/system/AMQueueImplP.nc"
-am_id_t arg_0x2b4e4b32a488, 
+am_id_t arg_0x2b8e44b80488, 
 # 80 "/home/maru/local/tinyos-2.1.1/tos/interfaces/AMSend.nc"
 am_addr_t addr, 
 #line 71
@@ -5502,7 +5508,7 @@ uint8_t len);
 # 100 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Send.nc"
 static void /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$Send$sendDone(
 # 46 "/home/maru/local/tinyos-2.1.1/tos/system/AMQueueImplP.nc"
-uint8_t arg_0x2b4e4b32b318, 
+uint8_t arg_0x2b8e44b37318, 
 # 96 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Send.nc"
 message_t * msg, 
 
@@ -5882,7 +5888,7 @@ static inline void TossimActiveMessageC$active_message_deliver_handle(sim_event_
   message_t *m = (message_t *)evt->data;
 
 #line 238
-  sim_log_debug(129U, "Packet", "Delivering packet to %i at %s\n", (int )sim_node(), sim_time_string());
+  sim_log_debug(130U, "Packet", "Delivering packet to %i at %s\n", (int )sim_node(), sim_time_string());
   TossimActiveMessageC$Model$receive(m);
 }
 
@@ -5981,22 +5987,22 @@ inline static error_t Node$sendBufferTask$postTask(void ){
 #line 67
 }
 #line 67
-# 625 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 584 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 static inline int Node$forwardPacketTo(lspTable *list, int dest)
-#line 625
+#line 584
 {
   return lspTableLookUp(list, dest);
 }
 
-#line 506
+#line 503
 static inline void Node$printCostList(lspMap *list, uint8_t nodeID)
-#line 506
+#line 503
 {
   uint8_t i;
 
-#line 508
+#line 505
   for (i = 0; i < Node$totalNodes[sim_node()]; i++) {
-      sim_log_debug(216U, "genDebug", "From %d To %d Costs %d", nodeID, i, list[nodeID].cost[i]);
+      sim_log_debug(217U, "genDebug", "From %d To %d Costs %d", nodeID, i, list[nodeID].cost[i]);
     }
 }
 
@@ -6202,9 +6208,9 @@ static inline int getCMD(uint8_t *array, uint8_t size)
   return CMD_ERROR;
 }
 
-# 156 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 154 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 static inline message_t *Node$Receive$receive(message_t *msg, void *payload, uint8_t len)
-#line 156
+#line 154
 {
   if (!Node$isActive[sim_node()]) {
 
@@ -6217,62 +6223,62 @@ static inline message_t *Node$Receive$receive(message_t *msg, void *payload, uin
       pair temporary;
 
       if (TOS_NODE_ID == __nesc_ntoh_uint16(myMsg->dest.nxdata)) {
-          sim_log_debug(172U, "genDebug", "Packet from %d has arrived! Msg: %s\n", __nesc_ntoh_uint16(myMsg->src.nxdata), myMsg->payload);
+          sim_log_debug(173U, "genDebug", "Packet from %d has arrived! Msg: %s\n", __nesc_ntoh_uint16(myMsg->src.nxdata), myMsg->payload);
           switch (__nesc_ntoh_uint8(myMsg->protocol.nxdata)) {
               uint8_t createMsg[PACKET_MAX_PAYLOAD_SIZE];
               uint16_t dest;
               int forwardTo;
 
-#line 173
+#line 171
               case PROTOCOL_PING: 
-                sim_log_debug(173U, "genDebug", "Sending Ping Reply to %d! \n\n", __nesc_ntoh_uint16(myMsg->src.nxdata));
-              sim_log_debug(174U, "Project2D", "Running dijkstra\n");
+                sim_log_debug(174U, "genDebug", "Sending Ping Reply to %d! \n\n", __nesc_ntoh_uint16(myMsg->src.nxdata));
+              sim_log_debug(175U, "Project2D", "Running dijkstra\n");
               Node$dijkstra();
-              sim_log_debug(175U, "Project2D", "END\n\n");
+              sim_log_debug(176U, "Project2D", "END\n\n");
               forwardTo = Node$forwardPacketTo(&Node$confirmedList[sim_node()], __nesc_ntoh_uint16(myMsg->src.nxdata));
-              sim_log_debug(176U, "Project2F", "Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+              sim_log_debug(177U, "Project2F", "Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
               Node$makePack(&Node$sendPackage[sim_node()], TOS_NODE_ID, __nesc_ntoh_uint16(myMsg->src.nxdata), MAX_TTL, PROTOCOL_PINGREPLY, Node$sequenceNum[sim_node()]++, (uint8_t *)myMsg->payload, sizeof  myMsg->payload);
               sendBufferPushBack(&Node$packBuffer[sim_node()], Node$sendPackage[sim_node()], __nesc_ntoh_uint16(Node$sendPackage[sim_node()].src.nxdata), forwardTo);
               Node$sendBufferTask$postTask();
               break;
               case PROTOCOL_PINGREPLY: 
                 if (!arrListContains(&Node$Received[sim_node()], __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata))) {
-                    sim_log_debug(177U, "Project1F", "--------------PING REPLY SRC:%d DEST:%d SEQ:%d--------------\n", __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->dest.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata));
-                    sim_log_debug(178U, "genDebug", "Received a Ping Reply from %d!\n\n", __nesc_ntoh_uint16(myMsg->src.nxdata));
+                    sim_log_debug(178U, "Project1F", "--------------PING REPLY SRC:%d DEST:%d SEQ:%d--------------\n", __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->dest.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata));
+                    sim_log_debug(179U, "genDebug", "Received a Ping Reply from %d!\n\n", __nesc_ntoh_uint16(myMsg->src.nxdata));
                     temp1.seq = __nesc_ntoh_uint16(myMsg->seq.nxdata);
                     temp1.src = __nesc_ntoh_uint16(myMsg->src.nxdata);
                     arrListPushBack(&Node$Received[sim_node()], temp1);
                   }
                 else {
-                  sim_log_debug(179U, "Project1F", "Ping reply duplicate, dropping\n\n");
+                  sim_log_debug(180U, "Project1F", "Ping reply duplicate, dropping\n\n");
                   }
               break;
               case PROTOCOL_CMD: 
                 switch (getCMD((uint8_t *)& myMsg->payload, sizeof  myMsg->payload)) {
                     uint32_t temp = 0;
 
-#line 199
+#line 197
                     case CMD_PING: 
-                      sim_log_debug(180U, "genDebug", "Ping packet received: %d \n", __nesc_ntoh_uint16(myMsg->seq.nxdata));
-                    sim_log_debug(181U, "genDebug", "Sending Ping Reply to %d! \n\n", __nesc_ntoh_uint16(myMsg->src.nxdata));
+                      sim_log_debug(181U, "genDebug", "Ping packet received: %d \n", __nesc_ntoh_uint16(myMsg->seq.nxdata));
+                    sim_log_debug(182U, "genDebug", "Sending Ping Reply to %d! \n\n", __nesc_ntoh_uint16(myMsg->src.nxdata));
 
-                    sim_log_debug(182U, "Project2D", "Running dijkstra\n");
+                    sim_log_debug(183U, "Project2D", "Running dijkstra\n");
                     Node$dijkstra();
-                    sim_log_debug(183U, "Project2D", "END\n\n");
+                    sim_log_debug(184U, "Project2D", "END\n\n");
 
                     memcpy(&createMsg, myMsg->payload + PING_CMD_LENGTH, sizeof  myMsg->payload - PING_CMD_LENGTH);
                     memcpy(&dest, myMsg->payload + PING_CMD_LENGTH - 2, sizeof(uint8_t ));
                     Node$makePack(&Node$sendPackage[sim_node()], TOS_NODE_ID, (dest - 48) & 0x00FF, MAX_TTL, PROTOCOL_PING, Node$sequenceNum[sim_node()]++, (uint8_t *)createMsg, 
                     sizeof createMsg);
 
-                    sim_log_debug(184U, "genDebug", "%d %d %s \n", __nesc_ntoh_uint16(Node$sendPackage[sim_node()].src.nxdata), __nesc_ntoh_uint16(Node$sendPackage[sim_node()].dest.nxdata), Node$sendPackage[sim_node()].payload);
+                    sim_log_debug(185U, "genDebug", "%d %d %s \n", __nesc_ntoh_uint16(Node$sendPackage[sim_node()].src.nxdata), __nesc_ntoh_uint16(Node$sendPackage[sim_node()].dest.nxdata), Node$sendPackage[sim_node()].payload);
 
 
                     forwardTo = Node$forwardPacketTo(&Node$confirmedList[sim_node()], __nesc_ntoh_uint16(Node$sendPackage[sim_node()].dest.nxdata));
-                    sim_log_debug(185U, "Project2F", "Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
+                    sim_log_debug(186U, "Project2F", "Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
 
                     sendBufferPushBack(&Node$packBuffer[sim_node()], Node$sendPackage[sim_node()], __nesc_ntoh_uint16(Node$sendPackage[sim_node()].src.nxdata), forwardTo);
-                    sim_log_debug(186U, "Project1F", "BroadCasting from %d SEQ#:%d DEST:%d \n", TOS_NODE_ID, __nesc_ntoh_uint16(myMsg->seq.nxdata), __nesc_ntoh_uint16(Node$sendPackage[sim_node()].dest.nxdata));
+                    sim_log_debug(187U, "Project1F", "BroadCasting from %d SEQ#:%d DEST:%d \n", TOS_NODE_ID, __nesc_ntoh_uint16(myMsg->seq.nxdata), __nesc_ntoh_uint16(Node$sendPackage[sim_node()].dest.nxdata));
                     Node$sendBufferTask$postTask();
                     break;
                     case CMD_KILL: 
@@ -6289,29 +6295,28 @@ static inline message_t *Node$Receive$receive(message_t *msg, void *payload, uin
             }
         }
       else {
-#line 234
+#line 232
         if (TOS_NODE_ID == __nesc_ntoh_uint16(myMsg->src.nxdata)) {
 
-            sim_log_debug(187U, "Project1F", "THIS IS THE SOURCE? SRC:%d dest:%d seq:%d \n\n", __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->dest.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata));
+            sim_log_debug(188U, "Project1F", "THIS IS THE SOURCE? SRC:%d dest:%d seq:%d \n\n", __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->dest.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata));
             return msg;
           }
         else {
-#line 239
+#line 237
           if (__nesc_ntoh_uint16(myMsg->dest.nxdata) == Node$discoveryPacket[sim_node()]) {
               pair friendListInfo;
               uint8_t *tempArray;
               int i;
-#line 242
+#line 240
               int j;
               int difference;
 
-#line 244
+#line 242
               switch (__nesc_ntoh_uint8(myMsg->protocol.nxdata)) {
                   case PROTOCOL_LINKSTATE: 
                     if (!arrListContains(&Node$lspTracker[sim_node()], __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata))) {
-
                         if (arrListSize(&Node$lspTracker[sim_node()]) >= 30) {
-                            sim_log_debug(188U, "Project2L", "Popping front\n");
+                            sim_log_debug(189U, "Project2L", "Popping front\n");
                             pop_front(&Node$lspTracker[sim_node()]);
                           }
 
@@ -6320,56 +6325,56 @@ static inline message_t *Node$Receive$receive(message_t *msg, void *payload, uin
                         arrListPushBack(&Node$lspTracker[sim_node()], temp1);
                         tempArray = (uint8_t *)myMsg->payload;
                         lspMapinitialize(&Node$lspMAP[sim_node()], __nesc_ntoh_uint16(myMsg->src.nxdata));
-                        sim_log_debug(189U, "Project2L", "BEFORE!! src: %d seq#: %d :< \n", __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata));
+                        sim_log_debug(190U, "Project2L", "BEFORE!! src: %d seq#: %d :< \n", __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata));
                         for (i = 0; i < Node$totalNodes[sim_node()]; i++) {
                             if (tempArray[i] != -1 && tempArray[i] != 0) {
-                              sim_log_debug(190U, "Project2L", "Printing out src:%d neighbor:%d  cost:%d \n", __nesc_ntoh_uint16(myMsg->src.nxdata), i, tempArray[i]);
+                              sim_log_debug(191U, "Project2L", "Printing out src:%d neighbor:%d  cost:%d \n", __nesc_ntoh_uint16(myMsg->src.nxdata), i, tempArray[i]);
                               }
                           }
-#line 263
+#line 260
                         tempArray = (uint8_t *)myMsg->payload;
-                        sim_log_debug(191U, "Project2L", "LINK STATE OF GREATNESS. FLOODING THE NETWORK from %d seq#: %d :< \n", __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata));
+                        sim_log_debug(192U, "Project2L", "LINK STATE OF GREATNESS. FLOODING THE NETWORK from %d seq#: %d :< \n", __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata));
                         for (i = 0; i < Node$totalNodes[sim_node()]; i++) {
                             Node$lspMAP[sim_node()][__nesc_ntoh_uint16(myMsg->src.nxdata)].cost[i] = tempArray[i];
                             if (tempArray[i] != -1 && tempArray[i] != 0) {
-                              sim_log_debug(192U, "Project2L", "Printing out src:%d neighbor:%d  cost:%d \n", __nesc_ntoh_uint16(myMsg->src.nxdata), i, tempArray[i]);
+                              sim_log_debug(193U, "Project2L", "Printing out src:%d neighbor:%d  cost:%d \n", __nesc_ntoh_uint16(myMsg->src.nxdata), i, tempArray[i]);
                               }
                           }
-#line 270
+#line 267
                         Node$makePack(&Node$sendPackage[sim_node()], __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->dest.nxdata), __nesc_ntoh_uint8(myMsg->TTL.nxdata) - 1, __nesc_ntoh_uint8(myMsg->protocol.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata), (uint8_t *)myMsg->payload, 20);
                         sendBufferPushBack(&Node$packBuffer[sim_node()], Node$sendPackage[sim_node()], __nesc_ntoh_uint16(Node$sendPackage[sim_node()].src.nxdata), AM_BROADCAST_ADDR);
                         Node$sendBufferTask$postTask();
                       }
                     else {
-                        sim_log_debug(193U, "Project2L", "Already received this packet from %d, will not flood. \n\n", __nesc_ntoh_uint16(myMsg->src.nxdata));
+                        sim_log_debug(194U, "Project2L", "Already received this packet from %d, will not flood. \n\n", __nesc_ntoh_uint16(myMsg->src.nxdata));
                       }
                   break;
                   case PROTOCOL_PING: 
 
-                    sim_log_debug(194U, "Project2N", "Sending PingReply seq#: %d src: %d \n", __nesc_ntoh_uint16(myMsg->seq.nxdata), __nesc_ntoh_uint16(myMsg->src.nxdata));
+                    sim_log_debug(195U, "Project2N", "Sending PingReply seq#: %d src: %d \n", __nesc_ntoh_uint16(myMsg->seq.nxdata), __nesc_ntoh_uint16(myMsg->src.nxdata));
                   Node$makePack(&Node$sendPackage[sim_node()], TOS_NODE_ID, Node$discoveryPacket[sim_node()], MAX_TTL, PROTOCOL_PINGREPLY, __nesc_ntoh_uint16(myMsg->seq.nxdata), (uint8_t *)myMsg->payload, sizeof  myMsg->payload);
                   sendBufferPushBack(&Node$packBuffer[sim_node()], Node$sendPackage[sim_node()], TOS_NODE_ID, __nesc_ntoh_uint16(myMsg->src.nxdata));
-                  sim_log_debug(195U, "Project1N", "Ping Received: I am ignoring you %d. \n", __nesc_ntoh_uint16(myMsg->src.nxdata));
+                  sim_log_debug(196U, "Project1N", "Ping Received: I am ignoring you %d. \n", __nesc_ntoh_uint16(myMsg->src.nxdata));
                   Node$sendBufferTask$postTask();
                   break;
                   case PROTOCOL_PINGREPLY: 
                     difference = 0;
 
-                  sim_log_debug(196U, "Project1N", "PingReply Received: That's mean :< %d. \n", __nesc_ntoh_uint16(myMsg->src.nxdata));
-                  sim_log_debug(197U, "Project2N", "Received Ping reply seq#: %d \n", __nesc_ntoh_uint16(myMsg->seq.nxdata));
+                  sim_log_debug(197U, "Project1N", "PingReply Received: That's mean :< %d. \n", __nesc_ntoh_uint16(myMsg->src.nxdata));
+                  sim_log_debug(198U, "Project2N", "Received Ping reply seq#: %d \n", __nesc_ntoh_uint16(myMsg->seq.nxdata));
                   if (!arrListContains(&Node$friendList[sim_node()], __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata))) {
                       friendListInfo.seq = __nesc_ntoh_uint16(myMsg->seq.nxdata);
                       friendListInfo.src = __nesc_ntoh_uint16(myMsg->src.nxdata);
                       friendListInfo.timer = Node$neighborDiscoveryTimer$getNow();
                       if (arrListContainsKey(&Node$friendList[sim_node()], __nesc_ntoh_uint16(myMsg->src.nxdata))) {
                           arrListReplace(&Node$friendList[sim_node()], __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata), friendListInfo.timer);
-                          sim_log_debug(198U, "Project1N", "---------------Updating my friendList---------------\n\n");
+                          sim_log_debug(199U, "Project1N", "---------------Updating my friendList---------------\n\n");
                         }
                       else {
                         arrListPushBack(&Node$friendList[sim_node()], friendListInfo);
                         }
-#line 301
-                      sim_log_debug(199U, "Project1N", "NOT IN THE LIST, ADDING: Adding to my FriendList anyways T_T \n\n");
+#line 298
+                      sim_log_debug(200U, "Project1N", "NOT IN THE LIST, ADDING: Adding to my FriendList anyways T_T \n\n");
 
 
                       if (Node$lastSequenceTracker[sim_node()][__nesc_ntoh_uint16(myMsg->src.nxdata)] < __nesc_ntoh_uint16(myMsg->seq.nxdata)) {
@@ -6380,18 +6385,18 @@ static inline message_t *Node$Receive$receive(message_t *msg, void *payload, uin
                             Node$totalAverageEMA[sim_node()][__nesc_ntoh_uint16(myMsg->src.nxdata)] = Node$EMA(1.0, 1.0, 1.0);
                             }
                           else 
-#line 310
+#line 307
                             {
                               Node$totalAverageEMA[sim_node()][__nesc_ntoh_uint16(myMsg->src.nxdata)] = Node$EMA(Node$totalAverageEMA[sim_node()][__nesc_ntoh_uint16(myMsg->src.nxdata)], 1, 1 / difference);
                             }
                         }
                     }
                   else {
-                      sim_log_debug(200U, "Project1N", "Oh you're already in my FriendList? :D");
+                      sim_log_debug(201U, "Project1N", "Oh you're already in my FriendList? :D");
                     }
                   break;
                   default: 
-                    sim_log_debug(201U, "Project1N", "I should never get here, I hope. \n");
+                    sim_log_debug(202U, "Project1N", "I should never get here, I hope. \n");
                   break;
                 }
             }
@@ -6399,26 +6404,26 @@ static inline message_t *Node$Receive$receive(message_t *msg, void *payload, uin
             {
               int forwardTo;
 
-#line 327
-              sim_log_debug(202U, "Project2D", "Running dijkstra\n");
+#line 324
+              sim_log_debug(203U, "Project2D", "Running dijkstra\n");
               Node$dijkstra();
-              sim_log_debug(203U, "Project2D", "END\n\n");
+              sim_log_debug(204U, "Project2D", "END\n\n");
               forwardTo = Node$forwardPacketTo(&Node$confirmedList[sim_node()], __nesc_ntoh_uint16(myMsg->dest.nxdata));
-              sim_log_debug(204U, "Project2F", "Forwarding to %d and src is %d \n", forwardTo, __nesc_ntoh_uint16(myMsg->src.nxdata));
+              sim_log_debug(205U, "Project2F", "Forwarding to %d and src is %d \n", forwardTo, __nesc_ntoh_uint16(myMsg->src.nxdata));
               if (forwardTo == 0) {
-#line 332
+#line 329
                 Node$printCostList(&Node$lspMAP[sim_node()], TOS_NODE_ID);
                 }
-#line 333
+#line 330
               if (forwardTo == -1) {
-                  sim_log_debug(205U, "Project2F", "rechecking \n");
+                  sim_log_debug(206U, "Project2F", "rechecking \n");
                   Node$dijkstra();
                   forwardTo = Node$forwardPacketTo(&Node$confirmedList[sim_node()], __nesc_ntoh_uint16(myMsg->dest.nxdata));
                   if (forwardTo == -1) {
-                    sim_log_debug(206U, "Project2F", "Dropping for reals\n");
+                    sim_log_debug(207U, "Project2F", "Dropping for reals\n");
                     }
                   else 
-#line 339
+#line 336
                     {
                       Node$makePack(&Node$sendPackage[sim_node()], __nesc_ntoh_uint16(myMsg->src.nxdata), __nesc_ntoh_uint16(myMsg->dest.nxdata), __nesc_ntoh_uint8(myMsg->TTL.nxdata) - 1, __nesc_ntoh_uint8(myMsg->protocol.nxdata), __nesc_ntoh_uint16(myMsg->seq.nxdata), (uint8_t *)myMsg->payload, sizeof  myMsg->payload);
                       sendBufferPushBack(&Node$packBuffer[sim_node()], Node$sendPackage[sim_node()], __nesc_ntoh_uint16(Node$sendPackage[sim_node()].src.nxdata), forwardTo);
@@ -6433,11 +6438,11 @@ static inline message_t *Node$Receive$receive(message_t *msg, void *payload, uin
             }
           }
         }
-#line 378
+#line 375
       return msg;
     }
 
-  sim_log_debug(207U, "genDebug", "Unknown Packet Type\n");
+  sim_log_debug(208U, "genDebug", "Unknown Packet Type\n");
   return msg;
 }
 
@@ -6449,13 +6454,13 @@ static inline message_t *TossimActiveMessageC$Receive$default$receive(am_id_t id
 }
 
 # 78 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Receive.nc"
-inline static message_t * TossimActiveMessageC$Receive$receive(am_id_t arg_0x2b4e4ac2c340, message_t * msg, void * payload, uint8_t len){
+inline static message_t * TossimActiveMessageC$Receive$receive(am_id_t arg_0x2b8e44479340, message_t * msg, void * payload, uint8_t len){
 #line 78
   nx_struct message_t *__nesc_result;
 #line 78
 
 #line 78
-  switch (arg_0x2b4e4ac2c340) {
+  switch (arg_0x2b8e44479340) {
 #line 78
     case 6:
 #line 78
@@ -6465,7 +6470,7 @@ inline static message_t * TossimActiveMessageC$Receive$receive(am_id_t arg_0x2b4
 #line 78
     default:
 #line 78
-      __nesc_result = TossimActiveMessageC$Receive$default$receive(arg_0x2b4e4ac2c340, msg, payload, len);
+      __nesc_result = TossimActiveMessageC$Receive$default$receive(arg_0x2b8e44479340, msg, payload, len);
 #line 78
       break;
 #line 78
@@ -6477,50 +6482,45 @@ inline static message_t * TossimActiveMessageC$Receive$receive(am_id_t arg_0x2b4
 #line 78
 }
 #line 78
-# 42 "/home/maru/workspace1/SkeletonCode/src/dataStructures/lspTable.h"
+# 32 "/home/maru/workspace1/SkeletonCode/src/dataStructures/lspTable.h"
+static inline bool lspTupleReplace(lspTable *list, lspTuple newTuple, int cost)
+#line 32
+{
+  int i;
+
+#line 34
+  for (i = 0; i < list->numValues; i++) {
+      if (cost < list->lspTuples[i].nodeNcost && newTuple.dest == list->lspTuples[i].dest) {
+          list->lspTuples[i].dest = newTuple.dest;
+          list->lspTuples[i].nodeNcost = cost;
+          list->lspTuples[i].nextHop = newTuple.nextHop;
+          return TRUE;
+        }
+    }
+  return FALSE;
+}
+
+#line 59
 static inline bool lspTableIsEmpty(lspTable *cur)
-#line 42
+#line 59
 {
   if (cur->numValues == 0) {
     return TRUE;
     }
   else {
-#line 46
+#line 63
     return FALSE;
     }
 }
 
-#line 116
-static inline lspSrc lspTableMinCost(lspTable *cur)
-#line 116
-{
-  int i;
-  int minNode;
-  lspTuple temp;
-  lspSrc temp2;
-
-#line 121
-  temp.nodeNcost = 255;
-  for (i = 0; i < cur->numValues; i++) {
-      if (cur->lspTuples[i].nodeNcost < temp.nodeNcost) {
-          temp = cur->lspTuples[i];
-          minNode = i;
-        }
-    }
-  temp2.src = cur->lspTuples[minNode].nextHop;
-  temp2.indexNumber = minNode;
-
-  return temp2;
-}
-
-#line 96
+#line 95
 static inline lspTuple lspTableRemove(lspTable *list, int node)
-#line 96
+#line 95
 {
   uint8_t i;
   lspTuple temp;
 
-#line 99
+#line 98
   for (i = 0; i <= list->numValues; i++) {
       if (i == node) {
           if (list->numValues > 1) {
@@ -6538,19 +6538,54 @@ static inline lspTuple lspTableRemove(lspTable *list, int node)
     }
 }
 
-#line 82
-static inline bool lspTupleReplace(lspTable *list, lspTuple newTuple, int cost)
-#line 82
+static inline lspTuple lspSrcGetMinCost(lspTable *cur)
+#line 115
 {
   int i;
+  int minNode;
+  lspTuple temp;
+  lspTuple temp2;
 
-#line 84
+#line 120
+  temp.nodeNcost = 255;
+  for (i = 0; i < cur->numValues; i++) {
+      if (cur->lspTuples[i].nodeNcost < temp.nodeNcost) {
+          temp = cur->lspTuples[i];
+          minNode = i;
+        }
+    }
+
+
+  temp2 = lspTableRemove(cur, minNode);
+  return temp2;
+}
+
+#line 67
+static inline bool lspTableContains(lspTable *list, int node)
+#line 67
+{
+  uint8_t i;
+
+#line 69
   for (i = 0; i < list->numValues; i++) {
-      if (cost < list->lspTuples[i].nodeNcost && newTuple.dest == list->lspTuples[i].dest) {
+      if (node == list->lspTuples[i].dest) {
+#line 70
+        return TRUE;
+        }
+    }
+#line 72
+  return FALSE;
+}
 
-          list->lspTuples[i].dest = newTuple.dest;
-          list->lspTuples[i].nodeNcost = cost;
-          list->lspTuples[i].nextHop = newTuple.nextHop;
+
+static inline bool lspTableContainsDest(lspTable *list, int node)
+#line 76
+{
+  uint8_t i;
+
+#line 78
+  for (i = 0; i < list->numValues; i++) {
+      if (node == list->lspTuples[i].dest) {
           return TRUE;
         }
     }
@@ -6639,13 +6674,13 @@ static inline message_t *TossimActiveMessageC$Snoop$default$receive(am_id_t id, 
 }
 
 # 78 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Receive.nc"
-inline static message_t * TossimActiveMessageC$Snoop$receive(am_id_t arg_0x2b4e4ac2a020, message_t * msg, void * payload, uint8_t len){
+inline static message_t * TossimActiveMessageC$Snoop$receive(am_id_t arg_0x2b8e44477020, message_t * msg, void * payload, uint8_t len){
 #line 78
   nx_struct message_t *__nesc_result;
 #line 78
 
 #line 78
-    __nesc_result = TossimActiveMessageC$Snoop$default$receive(arg_0x2b4e4ac2a020, msg, payload, len);
+    __nesc_result = TossimActiveMessageC$Snoop$default$receive(arg_0x2b8e44477020, msg, payload, len);
 #line 78
 
 #line 78
@@ -6719,7 +6754,7 @@ static inline void SimSchedulerBasicP$sim_scheduler_event_init(sim_event_t *e)
 #line 166
 static inline void SimSchedulerBasicP$Scheduler$init(void )
 {
-  sim_log_debug(116U, "Scheduler", "Initializing scheduler.\n");
+  sim_log_debug(117U, "Scheduler", "Initializing scheduler.\n");
   /* atomic removed: atomic calls only */
   {
     memset(SimSchedulerBasicP$m_next[sim_node()], SimSchedulerBasicP$NO_TASK, sizeof SimSchedulerBasicP$m_next[sim_node()]);
@@ -6822,9 +6857,9 @@ inline static void Node$pingTimeoutTimer$startPeriodic(uint32_t dt){
 #line 64
 }
 #line 64
-# 105 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 103 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 static inline void Node$AMControl$startDone(error_t err)
-#line 105
+#line 103
 {
   if (err == SUCCESS) {
       Node$pingTimeoutTimer$startPeriodic(PING_TIMER_PERIOD + (uint16_t )(Node$Random$rand16() % 200));
@@ -6833,7 +6868,7 @@ static inline void Node$AMControl$startDone(error_t err)
       Node$lspTimer$startPeriodic(PING_TIMER_PERIOD + (uint16_t )(Node$Random$rand16() % 200));
     }
   else 
-#line 111
+#line 109
     {
 
       Node$AMControl$start();
@@ -6855,9 +6890,9 @@ static inline void TossimPacketModelC$startDoneTask$runTask(void )
   TossimPacketModelC$Control$startDone(SUCCESS);
 }
 
-# 117 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 115 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 static inline void Node$AMControl$stopDone(error_t err)
-#line 117
+#line 115
 {
 }
 
@@ -6899,9 +6934,9 @@ static __inline  int8_t __nesc_hton_int8(void * target, int8_t value)
 }
 
 # 110 "/home/maru/local/tinyos-2.1.1/tos/interfaces/AMSend.nc"
-inline static void TossimActiveMessageC$AMSend$sendDone(am_id_t arg_0x2b4e4ac2d220, message_t * msg, error_t error){
+inline static void TossimActiveMessageC$AMSend$sendDone(am_id_t arg_0x2b8e4447a220, message_t * msg, error_t error){
 #line 110
-  /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$AMSend$sendDone(arg_0x2b4e4ac2d220, msg, error);
+  /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$AMSend$sendDone(arg_0x2b8e4447a220, msg, error);
 #line 110
 }
 #line 110
@@ -6942,13 +6977,13 @@ static inline void TossimPacketModelC$sendDoneTask$runTask(void )
 }
 
 # 80 "/home/maru/local/tinyos-2.1.1/tos/interfaces/AMSend.nc"
-inline static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$AMSend$send(am_id_t arg_0x2b4e4b32a488, am_addr_t addr, message_t * msg, uint8_t len){
+inline static error_t /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$AMSend$send(am_id_t arg_0x2b8e44b80488, am_addr_t addr, message_t * msg, uint8_t len){
 #line 80
   unsigned char __nesc_result;
 #line 80
 
 #line 80
-  __nesc_result = TossimActiveMessageC$AMSend$send(arg_0x2b4e4b32a488, addr, msg, len);
+  __nesc_result = TossimActiveMessageC$AMSend$send(arg_0x2b8e44b80488, addr, msg, len);
 #line 80
 
 #line 80
@@ -7018,7 +7053,7 @@ uint8_t len)
   if (/*AMQueueP.AMQueueImplP*/AMQueueImplP$0$queue[sim_node()][clientId].msg != (void *)0) {
       return EBUSY;
     }
-  sim_log_debug(258U, "AMQueue", "AMQueue: request to send from %hhu (%p): passed checks\n", clientId, msg);
+  sim_log_debug(257U, "AMQueue", "AMQueue: request to send from %hhu (%p): passed checks\n", clientId, msg);
 
   /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$queue[sim_node()][clientId].msg = msg;
   /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$Packet$setPayloadLength(msg, len);
@@ -7028,12 +7063,12 @@ uint8_t len)
       am_id_t amId = /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$AMPacket$type(msg);
       am_addr_t dest = /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$AMPacket$destination(msg);
 
-      sim_log_debug(259U, "AMQueue", "%s: request to send from %hhu (%p): queue empty\n", __FUNCTION__, clientId, msg);
+      sim_log_debug(258U, "AMQueue", "%s: request to send from %hhu (%p): queue empty\n", __FUNCTION__, clientId, msg);
       /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$current[sim_node()] = clientId;
 
       err = /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$AMSend$send(amId, dest, msg, len);
       if (err != SUCCESS) {
-          sim_log_debug(260U, "AMQueue", "%s: underlying send failed.\n", __FUNCTION__);
+          sim_log_debug(259U, "AMQueue", "%s: underlying send failed.\n", __FUNCTION__);
           /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$current[sim_node()] = 1;
           /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$queue[sim_node()][clientId].msg = (void *)0;
         }
@@ -7041,7 +7076,7 @@ uint8_t len)
       return err;
     }
   else {
-      sim_log_debug(261U, "AMQueue", "AMQueue: request to send from %hhu (%p): queue not empty\n", clientId, msg);
+      sim_log_debug(260U, "AMQueue", "AMQueue: request to send from %hhu (%p): queue not empty\n", clientId, msg);
     }
   return SUCCESS;
 }
@@ -7148,27 +7183,27 @@ inline static void * Node$Packet$getPayload(message_t * msg, uint8_t len){
 #line 126
 }
 #line 126
-# 411 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 408 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 static inline error_t Node$send(uint16_t src, uint16_t dest, pack *message)
-#line 411
+#line 408
 {
   unsigned char __nesc_temp45;
   unsigned char *__nesc_temp44;
 
-#line 412
+#line 409
   if (!Node$busy[sim_node()] && Node$isActive[sim_node()]) {
       pack *msg = (pack *)Node$Packet$getPayload(&Node$pkt[sim_node()], sizeof(pack ));
 
-#line 414
+#line 411
       *msg = *message;
 
 
       if (__nesc_ntoh_uint8(msg->TTL.nxdata) > 0) {
-#line 417
+#line 414
         (__nesc_temp44 = msg->TTL.nxdata, __nesc_hton_uint8(__nesc_temp44, (__nesc_temp45 = __nesc_ntoh_uint8(__nesc_temp44)) - 1), __nesc_temp45);
         }
       else {
-#line 418
+#line 415
         return FAIL;
         }
       if (Node$AMSend$send(dest, &Node$pkt[sim_node()], sizeof(pack )) == SUCCESS) {
@@ -7176,18 +7211,18 @@ static inline error_t Node$send(uint16_t src, uint16_t dest, pack *message)
           return SUCCESS;
         }
       else 
-#line 423
+#line 420
         {
-          sim_log_debug(208U, "genDebug", "The radio is busy, or something\n");
+          sim_log_debug(209U, "genDebug", "The radio is busy, or something\n");
           return FAIL;
         }
     }
   else 
-#line 427
+#line 424
     {
       return EBUSY;
     }
-  sim_log_debug(209U, "genDebug", "FAILED!?");
+  sim_log_debug(210U, "genDebug", "FAILED!?");
   return FAIL;
 }
 
@@ -7207,14 +7242,14 @@ static inline sendInfo sendBufferPopFront(sendBuffer *buffer)
   return returnVal;
 }
 
-# 385 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 382 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 static inline void Node$sendBufferTask$runTask(void )
-#line 385
+#line 382
 {
   if (Node$packBuffer[sim_node()].size != 0 && !Node$busy[sim_node()]) {
       sendInfo info;
 
-#line 388
+#line 385
       info = sendBufferPopFront(&Node$packBuffer[sim_node()]);
       Node$send(info.src, info.dest, & info.packet);
     }
@@ -7403,9 +7438,9 @@ static inline void /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$errorTask$runTask(voi
   /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$sendDone(/*AMQueueP.AMQueueImplP*/AMQueueImplP$0$current[sim_node()], /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$queue[sim_node()][/*AMQueueP.AMQueueImplP*/AMQueueImplP$0$current[sim_node()]].msg, FAIL);
 }
 
-# 146 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 144 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 static inline void Node$AMSend$sendDone(message_t *msg, error_t error)
-#line 146
+#line 144
 {
 
   if (&Node$pkt[sim_node()] == msg) {
@@ -7436,9 +7471,9 @@ static inline void /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$Send$default$sendDone
 }
 
 # 100 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Send.nc"
-inline static void /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$Send$sendDone(uint8_t arg_0x2b4e4b32b318, message_t * msg, error_t error){
+inline static void /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$Send$sendDone(uint8_t arg_0x2b8e44b37318, message_t * msg, error_t error){
 #line 100
-  switch (arg_0x2b4e4b32b318) {
+  switch (arg_0x2b8e44b37318) {
 #line 100
     case 0U:
 #line 100
@@ -7448,7 +7483,7 @@ inline static void /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$Send$sendDone(uint8_t
 #line 100
     default:
 #line 100
-      /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$Send$default$sendDone(arg_0x2b4e4b32b318, msg, error);
+      /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$Send$default$sendDone(arg_0x2b8e44b37318, msg, error);
 #line 100
       break;
 #line 100
@@ -7492,9 +7527,9 @@ static inline void SimSchedulerBasicP$TaskBasic$default$runTask(uint8_t id)
 }
 
 # 75 "/home/maru/local/tinyos-2.1.1/tos/interfaces/TaskBasic.nc"
-inline static void SimSchedulerBasicP$TaskBasic$runTask(uint8_t arg_0x2b4e4a914ab0){
+inline static void SimSchedulerBasicP$TaskBasic$runTask(uint8_t arg_0x2b8e44161ab0){
 #line 75
-  switch (arg_0x2b4e4a914ab0) {
+  switch (arg_0x2b8e44161ab0) {
 #line 75
     case TossimPacketModelC$startDoneTask:
 #line 75
@@ -7546,7 +7581,7 @@ inline static void SimSchedulerBasicP$TaskBasic$runTask(uint8_t arg_0x2b4e4a914a
 #line 75
     default:
 #line 75
-      SimSchedulerBasicP$TaskBasic$default$runTask(arg_0x2b4e4a914ab0);
+      SimSchedulerBasicP$TaskBasic$default$runTask(arg_0x2b8e44161ab0);
 #line 75
       break;
 #line 75
@@ -7707,7 +7742,7 @@ static inline void CpmModelC$sim_gain_receive_handle(sim_event_t *evt)
   CpmModelC$receive_message_t *predecessor = (void *)0;
   CpmModelC$receive_message_t *list = CpmModelC$outstandingReceptionHead[sim_node()];
 
-  sim_log_debug(149U, "CpmModelC", "Handling reception event @ %s.\n", sim_time_string());
+  sim_log_debug(150U, "CpmModelC", "Handling reception event @ %s.\n", sim_time_string());
   while (list != (void *)0) {
       if (list->next == mine) {
           predecessor = list;
@@ -7723,13 +7758,13 @@ static inline void CpmModelC$sim_gain_receive_handle(sim_event_t *evt)
         CpmModelC$outstandingReceptionHead[sim_node()] = mine->next;
       }
     else {
-        sim_log_error(150U, "CpmModelC", "Incoming packet list structure is corrupted: entry is not the head and no entry points to it.\n");
+        sim_log_error(151U, "CpmModelC", "Incoming packet list structure is corrupted: entry is not the head and no entry points to it.\n");
       }
     }
 #line 317
-  sim_log_debug(151U, "CpmModelC,SNRLoss", "Packet from %i to %i\n", (int )mine->source, (int )sim_node());
+  sim_log_debug(152U, "CpmModelC,SNRLoss", "Packet from %i to %i\n", (int )mine->source, (int )sim_node());
   if (!CpmModelC$checkReceive(mine)) {
-      sim_log_debug(152U, "CpmModelC,SNRLoss", " - lost packet from %i as SNR was too low.\n", (int )mine->source);
+      sim_log_debug(153U, "CpmModelC,SNRLoss", " - lost packet from %i as SNR was too low.\n", (int )mine->source);
       mine->lost = 1;
     }
   if (! mine->lost) {
@@ -7741,17 +7776,17 @@ static inline void CpmModelC$sim_gain_receive_handle(sim_event_t *evt)
 #line 327
       __nesc_hton_int8(meta->strength.nxdata, mine->strength);
 
-      sim_log_debug_clear(153U, "CpmModelC,SNRLoss", "  -signaling reception\n");
+      sim_log_debug_clear(154U, "CpmModelC,SNRLoss", "  -signaling reception\n");
       CpmModelC$Model$receive(mine->msg);
       if (mine->ack) {
-          sim_log_debug_clear(154U, "CpmModelC", " acknowledgment requested, ");
+          sim_log_debug_clear(155U, "CpmModelC", " acknowledgment requested, ");
         }
       else {
-          sim_log_debug_clear(155U, "CpmModelC", " no acknowledgment requested.\n");
+          sim_log_debug_clear(156U, "CpmModelC", " no acknowledgment requested.\n");
         }
 
       if (mine->ack && CpmModelC$Model$shouldAck(mine->msg)) {
-          sim_log_debug_clear(156U, "CpmModelC", " scheduling ack.\n");
+          sim_log_debug_clear(157U, "CpmModelC", " scheduling ack.\n");
           CpmModelC$sim_gain_schedule_ack(mine->source, sim_time() + 1, mine);
         }
       else {
@@ -7762,9 +7797,9 @@ static inline void CpmModelC$sim_gain_receive_handle(sim_event_t *evt)
     }
   else {
       if (RandomUniform() < 0.001) {
-          sim_log_debug(157U, "CpmModelC,SNRLoss", "Packet was technically lost, but TOSSIM introduces an ack false positive rate.\n");
+          sim_log_debug(158U, "CpmModelC,SNRLoss", "Packet was technically lost, but TOSSIM introduces an ack false positive rate.\n");
           if (mine->ack && CpmModelC$Model$shouldAck(mine->msg)) {
-              sim_log_debug_clear(158U, "CpmModelC", " scheduling ack.\n");
+              sim_log_debug_clear(159U, "CpmModelC", " scheduling ack.\n");
               CpmModelC$sim_gain_schedule_ack(mine->source, sim_time() + 1, mine);
             }
           else {
@@ -7775,7 +7810,7 @@ static inline void CpmModelC$sim_gain_receive_handle(sim_event_t *evt)
           CpmModelC$free_receive_message(mine);
         }
       CpmModelC$receiving[sim_node()] = 0;
-      sim_log_debug_clear(159U, "CpmModelC,SNRLoss", "  -packet was lost.\n");
+      sim_log_debug_clear(160U, "CpmModelC,SNRLoss", "  -packet was lost.\n");
     }
 }
 
@@ -7831,25 +7866,25 @@ static inline void CpmModelC$enqueue_receive_event(int source, sim_time_t endTim
 
 
   if (!sim_mote_is_on(sim_node())) {
-      sim_log_debug(160U, "CpmModelC", "Lost packet from %i due to %i being off\n", source, sim_node());
+      sim_log_debug(161U, "CpmModelC", "Lost packet from %i due to %i being off\n", source, sim_node());
       rcv->lost = 1;
     }
   else {
 #line 396
     if (!CpmModelC$shouldReceive(power - noiseStr)) {
-        sim_log_debug(161U, "CpmModelC,SNRLoss", "Lost packet from %i to %i due to SNR being too low (%i)\n", source, sim_node(), (int )(power - noiseStr));
+        sim_log_debug(162U, "CpmModelC,SNRLoss", "Lost packet from %i to %i due to SNR being too low (%i)\n", source, sim_node(), (int )(power - noiseStr));
         rcv->lost = 1;
       }
     else {
 #line 400
       if (CpmModelC$receiving[sim_node()]) {
-          sim_log_debug(162U, "CpmModelC,SNRLoss", "Lost packet from %i due to %i being mid-reception\n", source, sim_node());
+          sim_log_debug(163U, "CpmModelC,SNRLoss", "Lost packet from %i due to %i being mid-reception\n", source, sim_node());
           rcv->lost = 1;
         }
       else {
 #line 404
         if (CpmModelC$transmitting[sim_node()] && rcv->start < CpmModelC$transmissionEndTime[sim_node()] && CpmModelC$transmissionEndTime[sim_node()] <= rcv->end) {
-            sim_log_debug(163U, "CpmModelC,SNRLoss", "Lost packet from %i due to %i being mid-transmission, transmissionEndTime %llu\n", source, sim_node(), CpmModelC$transmissionEndTime[sim_node()]);
+            sim_log_debug(164U, "CpmModelC,SNRLoss", "Lost packet from %i due to %i being mid-transmission, transmissionEndTime %llu\n", source, sim_node(), CpmModelC$transmissionEndTime[sim_node()]);
             rcv->lost = 1;
           }
         else {
@@ -7862,7 +7897,7 @@ static inline void CpmModelC$enqueue_receive_event(int source, sim_time_t endTim
   list = CpmModelC$outstandingReceptionHead[sim_node()];
   while (list != (void *)0) {
       if (!CpmModelC$shouldReceive(list->power - rcv->power)) {
-          sim_log_debug(164U, "Gain,SNRLoss", "Going to lose packet from %i with signal %lf as am receiving a packet from %i with signal %lf\n", list->source, list->power, source, rcv->power);
+          sim_log_debug(165U, "Gain,SNRLoss", "Going to lose packet from %i with signal %lf as am receiving a packet from %i with signal %lf\n", list->source, list->power, source, rcv->power);
           list->lost = 1;
         }
       list = list->next;
@@ -7881,7 +7916,7 @@ static inline void CpmModelC$sim_gain_put(int dest, message_t *msg, sim_time_t e
   int prevNode = sim_node();
 
 #line 430
-  sim_log_debug(165U, "CpmModelC", "Enqueing reception event for %i at %llu with power %lf.\n", dest, endTime, power);
+  sim_log_debug(166U, "CpmModelC", "Enqueing reception event for %i at %llu with power %lf.\n", dest, endTime, power);
   sim_set_node(dest);
   CpmModelC$enqueue_receive_event(prevNode, endTime, msg, receive, power, reversePower);
   sim_set_node(prevNode);
@@ -7897,7 +7932,7 @@ static inline void CpmModelC$Model$putOnAirTo(int dest, message_t *msg, bool ack
   CpmModelC$requestAck[sim_node()] = ack;
   CpmModelC$outgoing[sim_node()] = msg;
   CpmModelC$transmissionEndTime[sim_node()] = endTime;
-  sim_log_debug(166U, "CpmModelC", "Node %i transmitting to %i, finishes at %llu.\n", sim_node(), dest, endTime);
+  sim_log_debug(167U, "CpmModelC", "Node %i transmitting to %i, finishes at %llu.\n", sim_node(), dest, endTime);
 
   while (neighborEntry != (void *)0) {
       int other = neighborEntry->mote;
@@ -7910,7 +7945,7 @@ static inline void CpmModelC$Model$putOnAirTo(int dest, message_t *msg, bool ack
   list = CpmModelC$outstandingReceptionHead[sim_node()];
   while (list != (void *)0) {
       list->lost = 1;
-      sim_log_debug(167U, "CpmModelC,SNRLoss", "Lost packet from %i because %i has outstanding reception, startTime %llu endTime %llu\n", list->source, sim_node(), list->start, list->end);
+      sim_log_debug(168U, "CpmModelC,SNRLoss", "Lost packet from %i because %i has outstanding reception, startTime %llu endTime %llu\n", list->source, sim_node(), list->start, list->end);
       list = list->next;
     }
 }
@@ -7931,7 +7966,7 @@ static inline void TossimPacketModelC$send_transmit_done(sim_event_t *evt)
 #line 282
   TossimPacketModelC$sending[sim_node()] = (void *)0;
   TossimPacketModelC$transmitting[sim_node()] = FALSE;
-  sim_log_debug(141U, "TossimPacketModelC", "PACKET: Signaling send done at %llu.\n", sim_time());
+  sim_log_debug(142U, "TossimPacketModelC", "PACKET: Signaling send done at %llu.\n", sim_time());
   TossimPacketModelC$Packet$sendDone(rval, TossimPacketModelC$running[sim_node()] ? SUCCESS : EOFF);
 }
 
@@ -7954,13 +7989,13 @@ static inline void TossimPacketModelC$send_transmit(sim_event_t *evt)
   evt->time += duration;
   evt->handle = TossimPacketModelC$send_transmit_done;
 
-  sim_log_debug(139U, "TossimPacketModelC", "PACKET: Broadcasting packet to everyone.\n");
+  sim_log_debug(140U, "TossimPacketModelC", "PACKET: Broadcasting packet to everyone.\n");
   TossimPacketModelC$GainRadioModel$putOnAirTo(TossimPacketModelC$destNode[sim_node()], TossimPacketModelC$sending[sim_node()], __nesc_ntoh_uint8(metadata->ack.nxdata), evt->time, 0.0, 0.0);
   __nesc_hton_uint8(metadata->ack.nxdata, 0);
 
   evt->time += sim_csma_rxtx_delay() * (sim_ticks_per_sec() / sim_csma_symbols_per_sec());
 
-  sim_log_debug(140U, "TossimPacketModelC", "PACKET: Send done at %llu.\n", evt->time);
+  sim_log_debug(141U, "TossimPacketModelC", "PACKET: Send done at %llu.\n", evt->time);
 
   sim_queue_insert(evt);
 }
@@ -7970,7 +8005,7 @@ static inline void CpmModelC$Model$setPendingTransmission(void )
 #line 459
 {
   CpmModelC$transmitting[sim_node()] = TRUE;
-  sim_log_debug(168U, "CpmModelC", "setPendingTransmission: transmitting %i @ %s\n", CpmModelC$transmitting[sim_node()], sim_time_string());
+  sim_log_debug(169U, "CpmModelC", "setPendingTransmission: transmitting %i @ %s\n", CpmModelC$transmitting[sim_node()], sim_time_string());
 }
 
 # 57 "/home/maru/local/tinyos-2.1.1/tos/lib/tossim/GainRadioModel.nc"
@@ -7984,7 +8019,7 @@ inline static void TossimPacketModelC$GainRadioModel$setPendingTransmission(void
 static inline bool CpmModelC$Model$clearChannel(void )
 #line 211
 {
-  sim_log_debug(147U, "CpmModelC", "Checking clear channel @ %s: %f <= %f \n", sim_time_string(), (double )CpmModelC$packetNoise((void *)0), CpmModelC$clearThreshold[sim_node()]);
+  sim_log_debug(148U, "CpmModelC", "Checking clear channel @ %s: %f <= %f \n", sim_time_string(), (double )CpmModelC$packetNoise((void *)0), CpmModelC$clearThreshold[sim_node()]);
   return CpmModelC$packetNoise((void *)0) < CpmModelC$clearThreshold[sim_node()];
 }
 
@@ -8047,7 +8082,7 @@ static inline void TossimPacketModelC$send_backoff(sim_event_t *evt)
 
 #line 243
         TossimPacketModelC$sending[sim_node()] = (void *)0;
-        sim_log_debug(138U, "TossimPacketModelC", "PACKET: Failed to send packet due to busy channel.\n");
+        sim_log_debug(139U, "TossimPacketModelC", "PACKET: Failed to send packet due to busy channel.\n");
         TossimPacketModelC$Packet$sendDone(rval, EBUSY);
       }
     }
@@ -8068,7 +8103,7 @@ static inline void TossimPacketModelC$start_csma(void )
   backoff %= sim_csma_init_high() - sim_csma_init_low();
   backoff += sim_csma_init_low();
   backoff *= sim_ticks_per_sec() / sim_csma_symbols_per_sec();
-  sim_log_debug(137U, "TossimPacketModelC", "Starting CMSA with %lli.\n", backoff);
+  sim_log_debug(138U, "TossimPacketModelC", "Starting CMSA with %lli.\n", backoff);
   first_sample = sim_time() + backoff;
 
   TossimPacketModelC$sendEvent[sim_node()].mote = sim_node();
@@ -8086,11 +8121,11 @@ static inline error_t TossimPacketModelC$Packet$send(int dest, message_t *msg, u
 #line 161
 {
   if (!TossimPacketModelC$initialized[sim_node()]) {
-      sim_log_error(135U, "TossimPacketModelC", "TossimPacketModelC: Send.send() called, but not initialized!\n");
+      sim_log_error(136U, "TossimPacketModelC", "TossimPacketModelC: Send.send() called, but not initialized!\n");
       return EOFF;
     }
   if (!TossimPacketModelC$running[sim_node()]) {
-      sim_log_error(136U, "TossimPacketModelC", "TossimPacketModelC: Send.send() called, but not running!\n");
+      sim_log_error(137U, "TossimPacketModelC", "TossimPacketModelC: Send.send() called, but not running!\n");
       return EOFF;
     }
 
@@ -8177,7 +8212,7 @@ static inline double CpmModelC$prr_estimate_from_snr(double SNR)
   double prr_hat = pow(1 - PSE, 23 * 2);
 
 #line 239
-  sim_log_debug(148U, "CpmModelC,SNR", "SNR is %lf, PRR is %lf\n", SNR, prr_hat);
+  sim_log_debug(149U, "CpmModelC,SNR", "SNR is %lf, PRR is %lf\n", SNR, prr_hat);
   if (prr_hat > 1) {
     prr_hat = 1.1;
     }
@@ -8199,7 +8234,7 @@ static inline bool TossimActiveMessageC$Model$shouldAck(message_t *msg)
 
 #line 129
   if (__nesc_ntoh_uint16(header->dest.nxdata) == TossimActiveMessageC$amAddress()) {
-      sim_log_debug(128U, "Acks", "Received packet addressed to me so ack it\n");
+      sim_log_debug(129U, "Acks", "Received packet addressed to me so ack it\n");
       return TRUE;
     }
   return FALSE;
@@ -8231,7 +8266,7 @@ static inline void TossimPacketModelC$GainRadioModel$acked(message_t *msg)
       __nesc_hton_uint8(metadata->ack.nxdata, 1);
       if (msg != TossimPacketModelC$sending[sim_node()]) {
           TossimPacketModelC$error[sim_node()] = 1;
-          sim_log_debug(142U, "TossimPacketModelC", "Requested ack for 0x%x, but outgoing packet is 0x%x.\n", msg, TossimPacketModelC$sending[sim_node()]);
+          sim_log_debug(143U, "TossimPacketModelC", "Requested ack for 0x%x, but outgoing packet is 0x%x.\n", msg, TossimPacketModelC$sending[sim_node()]);
         }
     }
 }
@@ -8254,7 +8289,7 @@ static inline double CpmModelC$arr_estimate_from_snr(double SNR)
   double prr_hat = pow(1 - PSE, 23 * 2);
 
 #line 157
-  sim_log_debug(145U, "CpmModelC,SNRLoss", "SNR is %lf, ARR is %lf\n", SNR, prr_hat);
+  sim_log_debug(146U, "CpmModelC,SNRLoss", "SNR is %lf, ARR is %lf\n", SNR, prr_hat);
   if (prr_hat > 1) {
     prr_hat = 1.1;
     }
@@ -8367,23 +8402,23 @@ static inline void checkTimes(pingList *pings, uint32_t currentTime)
   for (i; i < pingListSize(pings); i++) {
       temp = pingListGet(pings, i);
       if (temp.timeSent + PING_TIMEOUT < currentTime) {
-          sim_log_debug(66U, "genDebug", "Ping Lost!\n Msg: %s", temp.msg);
+          sim_log_debug(67U, "genDebug", "Ping Lost!\n Msg: %s", temp.msg);
 
           pingListDelete(pings, i);
         }
     }
 }
 
-# 119 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 117 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 static inline void Node$pingTimeoutTimer$fired(void )
-#line 119
+#line 117
 {
   checkTimes(&Node$pings[sim_node()], Node$pingTimeoutTimer$getNow());
 }
 
-#line 447
+#line 444
 static inline void Node$neighborDiscoveryPacket(void )
-#line 447
+#line 444
 {
 
   pack discoveryPackage;
@@ -8392,52 +8427,52 @@ static inline void Node$neighborDiscoveryPacket(void )
 
   memcpy(&createMsg, "", sizeof PACKET_MAX_PAYLOAD_SIZE);
   memcpy(&dest, "", sizeof(uint8_t ));
-  sim_log_debug(210U, "Project2N", "Sending seq#: %d\n", Node$neighborSequenceNum[sim_node()]);
+  sim_log_debug(211U, "Project2N", "Sending seq#: %d\n", Node$neighborSequenceNum[sim_node()]);
   Node$makePack(&Node$sendPackage[sim_node()], TOS_NODE_ID, Node$discoveryPacket[sim_node()], MAX_TTL, PROTOCOL_PING, Node$neighborSequenceNum[sim_node()]++, (uint8_t *)createMsg, 
   sizeof createMsg);
 
-  sim_log_debug(211U, "Project1N", "Hi, is anyone there? :D \n");
+  sim_log_debug(212U, "Project1N", "Hi, is anyone there? :D \n");
   sendBufferPushBack(&Node$packBuffer[sim_node()], Node$sendPackage[sim_node()], __nesc_ntoh_uint16(Node$sendPackage[sim_node()].src.nxdata), Node$discoveryPacket[sim_node()]);
 
   Node$sendBufferTask$postTask();
 }
 
-#line 124
+#line 122
 static inline void Node$neighborDiscoveryTimer$fired(void )
-#line 124
+#line 122
 {
   if (Node$isActive[sim_node()]) {
-#line 125
+#line 123
     Node$neighborDiscoveryPacket();
     }
 }
 
-#line 485
+#line 482
 static inline void Node$arrPrintList(arrlist *list)
-#line 485
+#line 482
 {
   uint8_t i;
 
-#line 487
+#line 484
   for (i = 0; i < list->numValues; i++) {
-      sim_log_debug(213U, "Project2test", "I think I am friends with %d and the last time we met was %d \n", list->values[i].src, list->values[i].timer);
+      sim_log_debug(214U, "Project2test", "I think I am friends with %d and the last time we met was %d \n", list->values[i].src, list->values[i].timer);
     }
 }
 
-#line 467
+#line 464
 static inline bool Node$arrListRemove(arrlist *list, uint32_t iTimer)
-#line 467
+#line 464
 {
   uint8_t i;
   uint8_t j;
   double timeOut;
   bool success = FALSE;
 
-#line 472
+#line 469
   for (i = 0; i < list->numValues; i++) {
       timeOut = iTimer - list->values[i].timer;
       if (list->values[i].timer + 50000 < iTimer) {
-          sim_log_debug(212U, "Project2test", "Removing %d from friendList, last seen at time %d. Time removed: %d \n", list->values[i].src, list->values[i].timer, iTimer);
+          sim_log_debug(213U, "Project2test", "Removing %d from friendList, last seen at time %d. Time removed: %d \n", list->values[i].src, list->values[i].timer, iTimer);
           list->values[i] = list->values[list->numValues - 1];
           list->numValues--;
           i--;
@@ -8462,65 +8497,59 @@ inline static uint32_t Node$neighborUpdateTimer$getNow(void ){
 #line 136
 }
 #line 136
-# 130 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 128 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 static inline void Node$neighborUpdateTimer$fired(void )
-#line 130
+#line 128
 {
   uint32_t timerCheck = Node$neighborUpdateTimer$getNow();
 
   if (Node$arrListRemove(&Node$friendList[sim_node()], timerCheck)) {
 
-      sim_log_debug(170U, "Project2test", "Removed something \n");
+      sim_log_debug(171U, "Project2test", "Removed something \n");
       Node$arrPrintList(&Node$friendList[sim_node()]);
     }
-  sim_log_debug(171U, "Project1N", "Done checking \n\n");
+  sim_log_debug(172U, "Project1N", "Done checking \n\n");
 }
 
-#line 513
+#line 510
 static inline void Node$lspNeighborDiscoveryPacket(void )
-#line 513
+#line 510
 {
 
   pack discoveryPackage;
   uint16_t dest;
   int i;
-#line 517
+#line 514
   int j;
   uint8_t lspCostList[20] = { -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1 };
 
-#line 519
+#line 516
   lspMapinitialize(&Node$lspMAP[sim_node()], TOS_NODE_ID);
-
-
-
-
-
-  Node$cost[sim_node()][0] = 1;
 
   for (i = 0; i < Node$friendList[sim_node()].numValues; i++) {
       if (1 / Node$totalAverageEMA[sim_node()][Node$friendList[sim_node()].values[i].src] * 10 < 255) {
           lspCostList[Node$friendList[sim_node()].values[i].src] = 1 / Node$totalAverageEMA[sim_node()][Node$friendList[sim_node()].values[i].src] * 10;
-          sim_log_debug(217U, "Project2test", "Cost to %d is %d %f %f\n", Node$friendList[sim_node()].values[i].src, lspCostList[Node$friendList[sim_node()].values[i].src], 1 / Node$totalAverageEMA[sim_node()][Node$friendList[sim_node()].values[i].src] * 10, Node$totalAverageEMA[sim_node()][Node$friendList[sim_node()].values[i].src]);
+          sim_log_debug(218U, "Project2test", "Cost to %d is %d %f %f\n", Node$friendList[sim_node()].values[i].src, lspCostList[Node$friendList[sim_node()].values[i].src], 1 / Node$totalAverageEMA[sim_node()][Node$friendList[sim_node()].values[i].src] * 10, Node$totalAverageEMA[sim_node()][Node$friendList[sim_node()].values[i].src]);
 
           Node$lspMAP[sim_node()][TOS_NODE_ID].cost[Node$friendList[sim_node()].values[i].src] = 1 / Node$totalAverageEMA[sim_node()][Node$friendList[sim_node()].values[i].src] * 10;
-          sim_log_debug(218U, "Project2L", "Priting neighbors: %d %d\n", Node$friendList[sim_node()].values[i].src, lspCostList[Node$friendList[sim_node()].values[i].src]);
+          sim_log_debug(219U, "Project2L", "Priting neighbors: %d %d\n", Node$friendList[sim_node()].values[i].src, lspCostList[Node$friendList[sim_node()].values[i].src]);
         }
       else {
-        sim_log_debug(219U, "Project2test", "Cost is too big, %d is not my neighbor yet. \n", Node$friendList[sim_node()].values[i].src);
+        sim_log_debug(220U, "Project2test", "Cost is too big, %d is not my neighbor yet. \n", Node$friendList[sim_node()].values[i].src);
         }
     }
-#line 538
+#line 529
   memcpy(&dest, "", sizeof(uint8_t ));
   Node$makePack(&Node$sendPackage[sim_node()], TOS_NODE_ID, Node$discoveryPacket[sim_node()], MAX_TTL, PROTOCOL_LINKSTATE, Node$linkSequenceNum[sim_node()]++, (uint8_t *)lspCostList, 20);
   sendBufferPushBack(&Node$packBuffer[sim_node()], Node$sendPackage[sim_node()], __nesc_ntoh_uint16(Node$sendPackage[sim_node()].src.nxdata), Node$discoveryPacket[sim_node()]);
   Node$sendBufferTask$postTask();
-  sim_log_debug(220U, "Project2L", "Sending LSPs EVERYWHERE \n");
-  sim_log_debug(221U, "Project2L", "END \n\n");
+  sim_log_debug(221U, "Project2L", "Sending LSPs EVERYWHERE \n");
+  sim_log_debug(222U, "Project2L", "END \n\n");
 }
 
-#line 141
+#line 139
 static inline void Node$lspTimer$fired(void )
-#line 141
+#line 139
 {
   Node$lspNeighborDiscoveryPacket();
 }
@@ -8531,9 +8560,9 @@ static inline void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC$0$Timer$d
 }
 
 # 83 "/home/maru/local/tinyos-2.1.1/tos/lib/timer/Timer.nc"
-inline static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC$0$Timer$fired(uint8_t arg_0x2b4e4b268c28){
+inline static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC$0$Timer$fired(uint8_t arg_0x2b8e44abfc28){
 #line 83
-  switch (arg_0x2b4e4b268c28) {
+  switch (arg_0x2b8e44abfc28) {
 #line 83
     case 0U:
 #line 83
@@ -8561,7 +8590,7 @@ inline static void /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC$0$Timer$f
 #line 83
     default:
 #line 83
-      /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC$0$Timer$default$fired(arg_0x2b4e4b268c28);
+      /*HilTimerMilliC.VirtualizeTimerC*/VirtualizeTimerC$0$Timer$default$fired(arg_0x2b8e44abfc28);
 #line 83
       break;
 #line 83
@@ -8635,7 +8664,7 @@ static inline void /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm
 static inline void HplAtm128Timer0AsyncP$cancel_compare(void )
 #line 577
 {
-  sim_log_debug(257U, "HplAtm128CompareC", "Cancelling compare at 0x%p\n", HplAtm128Timer0AsyncP$compare[sim_node()]);
+  sim_log_debug(256U, "HplAtm128CompareC", "Cancelling compare at 0x%p\n", HplAtm128Timer0AsyncP$compare[sim_node()]);
   if (HplAtm128Timer0AsyncP$compare[sim_node()] != (void *)0) {
       HplAtm128Timer0AsyncP$compare[sim_node()]->cancelled = 1;
       HplAtm128Timer0AsyncP$compare[sim_node()]->cleanup = sim_queue_cleanup_total;
@@ -8664,7 +8693,7 @@ static inline void HplAtm128Timer0AsyncP$cancel_overflow(void )
 {
   if (HplAtm128Timer0AsyncP$overflow[sim_node()] != (void *)0) {
       HplAtm128Timer0AsyncP$overflow[sim_node()]->cancelled = 1;
-      sim_log_debug(256U, "HplAtm128Timer0AsyncP", "Cancelling overflow %p.\n", HplAtm128Timer0AsyncP$overflow[sim_node()]);
+      sim_log_debug(255U, "HplAtm128Timer0AsyncP", "Cancelling overflow %p.\n", HplAtm128Timer0AsyncP$overflow[sim_node()]);
       HplAtm128Timer0AsyncP$overflow[sim_node()]->cleanup = sim_queue_cleanup_total;
     }
 }
@@ -8679,11 +8708,11 @@ static inline void HplAtm128Timer0AsyncP$timer0_overflow_handle(sim_event_t *evt
   else {
       if ((atm128RegFile[sim_node()][ATM128_TIMSK] & (1 << TOIE0)) != 0) {
           atm128RegFile[sim_node()][ATM128_TIFR] &= ~(1 << TOV0);
-          sim_log_debug(253U, "HplAtm128Timer0AsyncP", "Overflow interrupt at %s\n", sim_time_string());
+          sim_log_debug(252U, "HplAtm128Timer0AsyncP", "Overflow interrupt at %s\n", sim_time_string());
           INTERRUPT_16();
         }
       else {
-          sim_log_debug(254U, "HplAtm128Timer0AsyncP", "Setting overflow bit at %s\n", sim_time_string());
+          sim_log_debug(253U, "HplAtm128Timer0AsyncP", "Setting overflow bit at %s\n", sim_time_string());
           atm128RegFile[sim_node()][ATM128_TIFR] |= 1 << TOV0;
         }
       HplAtm128Timer0AsyncP$configure_overflow(evt);
@@ -8733,7 +8762,7 @@ static inline void HplAtm128Timer0AsyncP$Timer0$set(uint8_t newVal)
   uint8_t curVal = HplAtm128Timer0AsyncP$Timer0$get();
 
 #line 299
-  sim_log_debug(246U, "HplAtm128Timer0AsyncP", "HplAtm128Timer0AsyncP: Setting timer: %hhu\n", newVal);
+  sim_log_debug(245U, "HplAtm128Timer0AsyncP", "HplAtm128Timer0AsyncP: Setting timer: %hhu\n", newVal);
   if (newVal == curVal) {
       return;
     }
@@ -8760,7 +8789,7 @@ static inline void HplAtm128Timer0AsyncP$Timer0$set(uint8_t newVal)
 static inline void HplAtm128Timer0AsyncP$timer0_compare_handle(sim_event_t *evt)
 #line 187
 {
-  sim_log_debug(236U, "HplAtm128Timer0AsyncP", "Beginning compare 0x%p at %s\n", evt, sim_time_string());
+  sim_log_debug(235U, "HplAtm128Timer0AsyncP", "Beginning compare 0x%p at %s\n", evt, sim_time_string());
   if (evt->cancelled) {
       return;
     }
@@ -8769,21 +8798,21 @@ static inline void HplAtm128Timer0AsyncP$timer0_compare_handle(sim_event_t *evt)
 
 #line 194
       sim_print_now(timeStr, 128);
-      sim_log_debug(237U, "HplAtm128Timer0AsyncP", "Handling compare at 0x%p @ %s\n", evt, sim_time_string());
+      sim_log_debug(236U, "HplAtm128Timer0AsyncP", "Handling compare at 0x%p @ %s\n", evt, sim_time_string());
 
       if ((atm128RegFile[sim_node()][ATM128_TCCR0] & (1 << WGM01)) != 0 && !((atm128RegFile[sim_node()][ATM128_TCCR0] & (1 << WGM00)) != 0)) {
-          sim_log_debug(238U, "HplAtm128Timer0AsyncP", "%s: CTC is set, clear timer.\n", __FUNCTION__);
+          sim_log_debug(237U, "HplAtm128Timer0AsyncP", "%s: CTC is set, clear timer.\n", __FUNCTION__);
           HplAtm128Timer0AsyncP$Timer0$set(0);
         }
       else {
-          sim_log_debug(239U, "HplAtm128Timer0AsyncP", "%s: TCCR is 0x%hhx, %i, %i\n", __FUNCTION__, * (volatile uint8_t *)&atm128RegFile[sim_node()][0x33], (int )((atm128RegFile[sim_node()][ATM128_TCCR0] & (1 << WGM01)) != 0), (int )((atm128RegFile[sim_node()][ATM128_TCCR0] & (1 << WGM00)) != 0));
+          sim_log_debug(238U, "HplAtm128Timer0AsyncP", "%s: TCCR is 0x%hhx, %i, %i\n", __FUNCTION__, * (volatile uint8_t *)&atm128RegFile[sim_node()][0x33], (int )((atm128RegFile[sim_node()][ATM128_TCCR0] & (1 << WGM01)) != 0), (int )((atm128RegFile[sim_node()][ATM128_TCCR0] & (1 << WGM00)) != 0));
         }
 
       if ((atm128RegFile[sim_node()][ATM128_TIMSK] & (1 << OCIE0)) != 0) {
-          sim_log_debug(240U, "HplAtm128Timer0AsyncP", "TIFR is %hhx\n", * (volatile uint8_t *)&atm128RegFile[sim_node()][0x36]);
+          sim_log_debug(239U, "HplAtm128Timer0AsyncP", "TIFR is %hhx\n", * (volatile uint8_t *)&atm128RegFile[sim_node()][0x36]);
           atm128RegFile[sim_node()][ATM128_TIFR] &= ~(1 << OCF0);
-          sim_log_debug(241U, "HplAtm128Timer0AsyncP", "TIFR is %hhx\n", * (volatile uint8_t *)&atm128RegFile[sim_node()][0x36]);
-          sim_log_debug(242U, "HplAtm128Timer0AsyncP", "Compare interrupt @ %s\n", timeStr);
+          sim_log_debug(240U, "HplAtm128Timer0AsyncP", "TIFR is %hhx\n", * (volatile uint8_t *)&atm128RegFile[sim_node()][0x36]);
+          sim_log_debug(241U, "HplAtm128Timer0AsyncP", "Compare interrupt @ %s\n", timeStr);
           INTERRUPT_15();
         }
       else {
@@ -8803,7 +8832,7 @@ static inline sim_event_t *HplAtm128Timer0AsyncP$allocate_compare(void )
   sim_event_t *newEvent = sim_queue_allocate_event();
 
 #line 225
-  sim_log_debug(243U, "HplAtm128Timer0AsyncP", "Allocated compare at 0x%p\n", newEvent);
+  sim_log_debug(242U, "HplAtm128Timer0AsyncP", "Allocated compare at 0x%p\n", newEvent);
   newEvent->handle = HplAtm128Timer0AsyncP$timer0_compare_handle;
   newEvent->cleanup = sim_queue_cleanup_none;
   return newEvent;
@@ -9111,7 +9140,7 @@ inline static bool SimMainP$Scheduler$runNextTask(void ){
 static inline error_t TossimPacketModelC$Init$init(void )
 #line 86
 {
-  sim_log_debug(130U, "TossimPacketModelC", "TossimPacketModelC: Init.init() called\n");
+  sim_log_debug(131U, "TossimPacketModelC", "TossimPacketModelC: Init.init() called\n");
   TossimPacketModelC$initialized[sim_node()] = TRUE;
 
 
@@ -9150,7 +9179,7 @@ inline static void /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm
 static inline void HplAtm128Timer0AsyncP$Timer0Ctrl$setControl(Atm128TimerControl_t x)
 #line 364
 {
-  sim_log_debug(248U, "HplAtm128Timer0AsyncP", "Setting control to be 0x%hhx\n", x.flat);
+  sim_log_debug(247U, "HplAtm128Timer0AsyncP", "Setting control to be 0x%hhx\n", x.flat);
   * (volatile uint8_t *)&atm128RegFile[sim_node()][0x33] = x.flat;
 }
 
@@ -9221,13 +9250,13 @@ static inline void arrListInit(arrlist *cur)
   cur->numValues = 0;
 }
 
-# 99 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 97 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 static inline void Node$Boot$booted(void )
-#line 99
+#line 97
 {
   Node$AMControl$start();
   arrListInit(&Node$Received[sim_node()]);
-  sim_log_debug(169U, "genDebug", "Booted\n");
+  sim_log_debug(170U, "genDebug", "Booted\n");
 }
 
 # 60 "/home/maru/local/tinyos-2.1.1/tos/interfaces/Boot.nc"
@@ -9280,7 +9309,7 @@ static inline void SimMoteP$sim_mote_boot_handle(sim_event_t *e)
   sim_print_now(buf, 128);
 
   SimMoteP$bootEvent[sim_node()] = (sim_event_t *)(void *)0;
-  sim_log_debug(124U, "SimMoteP", "Turning on mote %i at time %s.\n", (int )sim_node(), buf);
+  sim_log_debug(125U, "SimMoteP", "Turning on mote %i at time %s.\n", (int )sim_node(), buf);
   SimMoteP$SimMote$turnOn();
 }
 
@@ -10739,11 +10768,11 @@ static void TossimActiveMessageC$Model$receive(message_t *msg)
   payload = TossimActiveMessageC$Packet$getPayload(TossimActiveMessageC$bufferPointer[sim_node()], TossimActiveMessageC$Packet$maxPayloadLength());
 
   if (TossimActiveMessageC$AMPacket$isForMe(msg)) {
-      sim_log_debug(126U, "AM", "Received active message (%p) of type %hhu and length %hhu for me @ %s.\n", TossimActiveMessageC$bufferPointer[sim_node()], TossimActiveMessageC$AMPacket$type(TossimActiveMessageC$bufferPointer[sim_node()]), len, sim_time_string());
+      sim_log_debug(127U, "AM", "Received active message (%p) of type %hhu and length %hhu for me @ %s.\n", TossimActiveMessageC$bufferPointer[sim_node()], TossimActiveMessageC$AMPacket$type(TossimActiveMessageC$bufferPointer[sim_node()]), len, sim_time_string());
       TossimActiveMessageC$bufferPointer[sim_node()] = TossimActiveMessageC$Receive$receive(TossimActiveMessageC$AMPacket$type(TossimActiveMessageC$bufferPointer[sim_node()]), TossimActiveMessageC$bufferPointer[sim_node()], payload, len);
     }
   else {
-      sim_log_debug(127U, "AM", "Snooped on active message of type %hhu and length %hhu for %hu @ %s.\n", TossimActiveMessageC$AMPacket$type(TossimActiveMessageC$bufferPointer[sim_node()]), len, TossimActiveMessageC$AMPacket$destination(TossimActiveMessageC$bufferPointer[sim_node()]), sim_time_string());
+      sim_log_debug(128U, "AM", "Snooped on active message of type %hhu and length %hhu for %hu @ %s.\n", TossimActiveMessageC$AMPacket$type(TossimActiveMessageC$bufferPointer[sim_node()]), len, TossimActiveMessageC$AMPacket$destination(TossimActiveMessageC$bufferPointer[sim_node()]), sim_time_string());
       TossimActiveMessageC$bufferPointer[sim_node()] = TossimActiveMessageC$Snoop$receive(TossimActiveMessageC$AMPacket$type(TossimActiveMessageC$bufferPointer[sim_node()]), TossimActiveMessageC$bufferPointer[sim_node()], payload, len);
     }
 }
@@ -10779,140 +10808,107 @@ static am_id_t TossimActiveMessageC$AMPacket$type(message_t *amsg)
   return __nesc_ntoh_uint8(header->type.nxdata);
 }
 
-# 564 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 554 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 static void Node$dijkstra(void )
-#line 564
+#line 554
 {
   int i;
-  lspTuple lspTup;
-  lspTuple temp;
-  lspTuple tupleCostCheck;
-  lspSrc temp2;
-  int lspTupNum;
+#line 555
   int neighborCheck;
+  lspTuple lspTup;
+#line 556
+  lspTuple temp;
 
-#line 572
+#line 557
   lspTableinit(&Node$tentativeList[sim_node()]);
   lspTableinit(&Node$confirmedList[sim_node()]);
   temp.dest = TOS_NODE_ID;
+#line 559
   temp.nodeNcost = 0;
+#line 559
   temp.nextHop = TOS_NODE_ID;
-
-  sim_log_debug(222U, "Project2D", "start of dijkstra \n");
-  sim_log_debug(223U, "Project2D", "PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
-  lspTablePushBack(&Node$confirmedList[sim_node()], temp);
-
-
-  for (i = 0; i < Node$totalNodes[sim_node()]; i++) {
-
-      if (Node$lspMAP[sim_node()][TOS_NODE_ID].cost[i] != 255 && Node$lspMAP[sim_node()][TOS_NODE_ID].cost[i] != 0) {
-          temp.nextHop = i;
-          temp.nodeNcost = Node$lspMAP[sim_node()][TOS_NODE_ID].cost[i];
-          temp.dest = i;
-          sim_log_debug(224U, "Project2D", "PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
-          lspTablePushBack(&Node$tentativeList[sim_node()], temp);
-        }
-    }
+  sim_log_debug(223U, "Project2D", "start of dijkstra \n");
+  sim_log_debug(224U, "Project2D", "PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
+  lspTablePushBack(&Node$tentativeList[sim_node()], temp);
   while (!lspTableIsEmpty(&Node$tentativeList[sim_node()])) {
-      temp2 = lspTableMinCost(&Node$tentativeList[sim_node()]);
-      lspTupNum = temp2.src;
-      lspTup = lspTableRemove(&Node$tentativeList[sim_node()], temp2.indexNumber);
-      sim_log_debug(225U, "Project2D", "PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", lspTup.dest, lspTup.nodeNcost, lspTup.nextHop);
-      if (!lspTableContainsDest(&Node$confirmedList[sim_node()], lspTup.dest)) {
-        lspTablePushBack(&Node$confirmedList[sim_node()], lspTup);
-        }
-#line 600
+      lspTup = lspSrcGetMinCost(&Node$tentativeList[sim_node()]);
       neighborCheck = lspTup.dest;
+      if (!lspTableContains(&Node$confirmedList[sim_node()], lspTup.dest)) {
+        if (lspTablePushBack(&Node$confirmedList[sim_node()], lspTup)) {
+          sim_log_debug(225U, "Project2D", "PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", lspTup.dest, lspTup.nodeNcost, lspTup.nextHop);
+          }
+        }
+#line 569
       for (i = 0; i < Node$totalNodes[sim_node()]; i++) {
-
-          if (Node$lspMAP[sim_node()][neighborCheck].cost[i] != 255 && Node$lspMAP[sim_node()][neighborCheck].cost[i] != 0) {
-              temp.nextHop = lspTupNum;
-              temp.nodeNcost = Node$lspMAP[sim_node()][neighborCheck].cost[i] + lspTup.nodeNcost;
-              temp.dest = i;
-              if (lspTupleReplace(&Node$tentativeList[sim_node()], temp, Node$lspMAP[sim_node()][neighborCheck].cost[i] + lspTup.nodeNcost)) {
-                  sim_log_debug(226U, "Project2D", "Replace from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
-                }
-              else {
-                if (!lspTableContainsDest(&Node$confirmedList[sim_node()], i)) {
-                    sim_log_debug(227U, "Project2D", "PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
-                    lspTablePushBack(&Node$tentativeList[sim_node()], temp);
-                  }
-                }
+          temp.nextHop = lspTup.nextHop == TOS_NODE_ID ? i : lspTup.nextHop;
+          temp.nodeNcost = Node$lspMAP[sim_node()][neighborCheck].cost[i] + lspTup.nodeNcost;
+          temp.dest = i;
+          if (!lspTableContainsDest(&Node$confirmedList[sim_node()], i) && Node$lspMAP[sim_node()][neighborCheck].cost[i] != 255 && Node$lspMAP[sim_node()][i].cost[neighborCheck] != 255) {
+            if (lspTablePushBack(&Node$tentativeList[sim_node()], temp)) {
+              sim_log_debug(226U, "Project2D", "PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
+              }
             }
         }
     }
-#line 618
-  sim_log_debug(228U, "Project2D", "Printing the routing table! \n");
-  for (i = 0; i < Node$confirmedList[sim_node()].numValues; i++) {
-      sim_log_debug(229U, "Project2D", "dest:%d cost:%d nextHop:%d \n", Node$confirmedList[sim_node()].lspTuples[i].dest, Node$confirmedList[sim_node()].lspTuples[i].nodeNcost, Node$confirmedList[sim_node()].lspTuples[i].nextHop);
-    }
-  sim_log_debug(230U, "Project2D", "End of dijkstra! \n");
+#line 578
+  sim_log_debug(227U, "Project2D", "Printing the routing table! \n");
+  for (i = 0; i < Node$confirmedList[sim_node()].numValues; i++) 
+    sim_log_debug(228U, "Project2D", "dest:%d cost:%d nextHop:%d \n", Node$confirmedList[sim_node()].lspTuples[i].dest, Node$confirmedList[sim_node()].lspTuples[i].nodeNcost, Node$confirmedList[sim_node()].lspTuples[i].nextHop);
+  sim_log_debug(229U, "Project2D", "End of dijkstra! \n");
 }
 
-# 26 "/home/maru/workspace1/SkeletonCode/src/dataStructures/lspTable.h"
+# 25 "/home/maru/workspace1/SkeletonCode/src/dataStructures/lspTable.h"
 static void lspTableinit(lspTable *list)
-#line 26
+#line 25
 {
   int i;
 
-#line 28
+#line 27
   for (i = 0; i < 20; i++) 
     list->lspTuples[i].nodeNcost = -1;
   list->numValues = 0;
 }
 
+#line 45
 static bool lspTablePushBack(lspTable *cur, lspTuple newVal)
-#line 33
+#line 45
 {
-  if (cur->numValues != 20) {
-
-      cur->lspTuples[cur->numValues] = newVal;
-      cur->numValues++;
-      return TRUE;
+  if (lspTupleReplace(cur, newVal, newVal.nodeNcost)) {
+      sim_log_debug(64U, "Project2D", "Replace from tentativeList dest:%d cost:%d nextHop:%d\n", newVal.dest, newVal.nodeNcost, newVal.nextHop);
+      return FALSE;
     }
   else {
-#line 39
-    return FALSE;
-    }
-}
-
-#line 59
-static bool lspTableContainsDest(lspTable *list, int node)
-#line 59
-{
-  uint8_t i;
-
-#line 61
-  for (i = 0; i < list->numValues; i++) {
-
-      if (node == list->lspTuples[i].dest) {
-
+      if (cur->numValues != 20) {
+          cur->lspTuples[cur->numValues] = newVal;
+          cur->numValues++;
           return TRUE;
         }
+      else {
+#line 55
+        return FALSE;
+        }
     }
-
-  return FALSE;
 }
 
-#line 134
+#line 133
 static int lspTableLookUp(lspTable *list, int dest)
-#line 134
+#line 133
 {
   int i;
 
-#line 136
+#line 135
   for (i = 0; i < list->numValues; i++) {
       if (list->lspTuples[i].dest == dest) {
         return list->lspTuples[i].nextHop;
         }
     }
-#line 140
+#line 139
   return -1;
 }
 
-# 434 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 431 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 static void Node$makePack(pack *Package, uint16_t src, uint16_t dest, uint16_t TTL, uint16_t protocol, uint16_t seq, uint8_t *payload, uint8_t length)
-#line 434
+#line 431
 {
   __nesc_hton_uint16(Package->src.nxdata, src);
   __nesc_hton_uint16(Package->dest.nxdata, dest);
@@ -10951,11 +10947,11 @@ static error_t SimSchedulerBasicP$TaskBasic$postTask(uint8_t id)
 #line 210
     __nesc_atomic_end(__nesc_atomic); }
   if (result == SUCCESS) {
-      sim_log_debug(119U, "Scheduler", "Posting task %hhu.\n", id);
+      sim_log_debug(120U, "Scheduler", "Posting task %hhu.\n", id);
       SimSchedulerBasicP$sim_scheduler_submit_event();
     }
   else {
-      sim_log_debug(120U, "Scheduler", "Posting task %hhu, but already posted.\n", id);
+      sim_log_debug(121U, "Scheduler", "Posting task %hhu, but already posted.\n", id);
     }
   return result;
 }
@@ -11003,13 +10999,13 @@ static bool arrListPushBack(arrlist *cur, dataType newVal)
     }
 }
 
-# 150 "/home/maru/workspace1/SkeletonCode/src/dataStructures/lspTable.h"
+# 147 "/home/maru/workspace1/SkeletonCode/src/dataStructures/lspTable.h"
 static void lspMapinitialize(lspMap *list, int TOS_NODE_ID)
-#line 150
+#line 147
 {
   int i;
 
-#line 152
+#line 149
   for (i = 0; i < 20; i++) {
       list[TOS_NODE_ID].cost[i] = -1;
     }
@@ -11054,7 +11050,7 @@ static uint8_t HplAtm128Timer0AsyncP$Timer0$get(void )
   elapsed = HplAtm128Timer0AsyncP$sim_to_clock(elapsed);
   elapsed = elapsed >> HplAtm128Timer0AsyncP$shiftFromScale();
   rval = (uint8_t )(elapsed & 0xff);
-  sim_log_debug(245U, "HplAtm128Timer0AsyncP", "HplAtm128Timer0AsyncP: Getting timer: %hhu\n", rval);
+  sim_log_debug(244U, "HplAtm128Timer0AsyncP", "HplAtm128Timer0AsyncP: Getting timer: %hhu\n", rval);
   return rval;
 }
 
@@ -11133,13 +11129,13 @@ static Atm128_TIFR_t HplAtm128Timer0AsyncP$Timer0Ctrl$getInterruptFlag(void )
 static uint8_t HplAtm128Timer0AsyncP$Compare$get(void )
 #line 457
 {
-  sim_log_debug(251U, "HplAtm128Timer0AsyncP", "HplAtm128Timer0AsyncP: Getting compare: %hhu\n", * (volatile uint8_t *)&atm128RegFile[sim_node()][0x31]);
+  sim_log_debug(250U, "HplAtm128Timer0AsyncP", "HplAtm128Timer0AsyncP: Getting compare: %hhu\n", * (volatile uint8_t *)&atm128RegFile[sim_node()][0x31]);
   return * (volatile uint8_t *)&atm128RegFile[sim_node()][0x31];
 }
 
-# 645 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 604 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 static float Node$EMA(float prevEMA, float now, float weight)
-#line 645
+#line 604
 {
   float alpha = 0.5 * weight;
   float averageEMA = alpha * now + (1 - alpha) * prevEMA;
@@ -11206,7 +11202,7 @@ static float Node$EMA(float prevEMA, float now, float weight)
   __nesc_enable_interrupt();
 
   sim_print_now(timeBuf, 128);
-  sim_log_debug(115U, "SimMainP", "Mote %li signaling boot at time %s.\n", sim_node(), timeBuf);
+  sim_log_debug(116U, "SimMainP", "Mote %li signaling boot at time %s.\n", sim_node(), timeBuf);
   SimMainP$Boot$booted();
 
 
@@ -11227,7 +11223,7 @@ static bool SimSchedulerBasicP$Scheduler$runNextTask(void )
       nextTask = SimSchedulerBasicP$popTask();
       if (nextTask == SimSchedulerBasicP$NO_TASK) 
         {
-          sim_log_debug(117U, "Scheduler", "Told to run next task, but no task to run.\n");
+          sim_log_debug(118U, "Scheduler", "Told to run next task, but no task to run.\n");
           {
             unsigned char __nesc_temp = 
 #line 189
@@ -11245,7 +11241,7 @@ static bool SimSchedulerBasicP$Scheduler$runNextTask(void )
 #line 193
     __nesc_atomic_end(__nesc_atomic); }
 #line 192
-  sim_log_debug(118U, "Scheduler", "Running task %hhu.\n", nextTask);
+  sim_log_debug(119U, "Scheduler", "Running task %hhu.\n", nextTask);
   SimSchedulerBasicP$TaskBasic$runTask(nextTask);
   return TRUE;
 }
@@ -11269,7 +11265,7 @@ uint8_t len)
   tossim_header_t *header = TossimActiveMessageC$getHeader(amsg);
 
 #line 78
-  sim_log_debug(125U, "AM", "AM: Sending packet (id=%hhu, len=%hhu) to %hu\n", id, len, addr);
+  sim_log_debug(126U, "AM", "AM: Sending packet (id=%hhu, len=%hhu) to %hu\n", id, len, addr);
   __nesc_hton_uint8(header->type.nxdata, id);
   __nesc_hton_uint16(header->dest.nxdata, addr);
   __nesc_hton_uint16(header->src.nxdata, TossimActiveMessageC$AMPacket$address());
@@ -11307,14 +11303,14 @@ static double CpmModelC$noise_hash_generation(void )
   double noise_val;
   uint16_t node_id = sim_node();
 
-  sim_log_debug(143U, "CpmModelC", "IN: noise_hash_generation()\n");
+  sim_log_debug(144U, "CpmModelC", "IN: noise_hash_generation()\n");
   if (5 <= remain && remain < 10) {
       noise_val = (double )sim_noise_generate(node_id, quotient + 1);
     }
   else {
       noise_val = (double )sim_noise_generate(node_id, quotient);
     }
-  sim_log_debug(144U, "CpmModelC,Tal", "%s: OUT: noise_hash_generation(): %lf\n", sim_time_string(), noise_val);
+  sim_log_debug(145U, "CpmModelC,Tal", "%s: OUT: noise_hash_generation(): %lf\n", sim_time_string(), noise_val);
 
   return noise_val;
 }
@@ -11335,7 +11331,7 @@ static void /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$AMSend$sendDone(am_id_t id, 
       /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$sendDone(/*AMQueueP.AMQueueImplP*/AMQueueImplP$0$current[sim_node()], msg, err);
     }
   else {
-      sim_log_debug(262U, "PointerBug", "%s received send done for %p, signaling for %p.\n", __FUNCTION__, msg, /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$queue[sim_node()][/*AMQueueP.AMQueueImplP*/AMQueueImplP$0$current[sim_node()]].msg);
+      sim_log_debug(261U, "PointerBug", "%s received send done for %p, signaling for %p.\n", __FUNCTION__, msg, /*AMQueueP.AMQueueImplP*/AMQueueImplP$0$queue[sim_node()][/*AMQueueP.AMQueueImplP*/AMQueueImplP$0$current[sim_node()]].msg);
     }
 }
 
@@ -11450,13 +11446,13 @@ static void /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128Alar
       uint8_t tifr = (uint8_t )/*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128AlarmAsyncP$0$TimerCtrl$getInterruptFlag().flat;
 
 #line 101
-      sim_log_debug(231U, "Atm128AlarmAsyncP", "Atm128AlarmAsyncP: TIFR is %hhx\n", tifr);
+      sim_log_debug(230U, "Atm128AlarmAsyncP", "Atm128AlarmAsyncP: TIFR is %hhx\n", tifr);
       if ((interrupt_in != 0 && interrupt_in < /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128AlarmAsyncP$0$MINDT) || tifr & (1 << OCF0)) {
           if (interrupt_in < /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128AlarmAsyncP$0$MINDT) {
-              sim_log_debug(232U, "Atm128AlarmAsyncP", "Atm128AlarmAsyncP: under min: %hhu.\n", interrupt_in);
+              sim_log_debug(231U, "Atm128AlarmAsyncP", "Atm128AlarmAsyncP: under min: %hhu.\n", interrupt_in);
             }
           else {
-              sim_log_debug(233U, "Atm128AlarmAsyncP", "Atm128AlarmAsyncP: OCF set.\n");
+              sim_log_debug(232U, "Atm128AlarmAsyncP", "Atm128AlarmAsyncP: OCF set.\n");
             }
           {
 #line 109
@@ -11468,14 +11464,14 @@ static void /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128Alar
 
       if (!/*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128AlarmAsyncP$0$set[sim_node()]) {
           newOcr0 = /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128AlarmAsyncP$0$MAXT;
-          sim_log_debug(234U, "Atm128AlarmAsyncP", "Atm128AlarmAsyncP: no alarm set, set at max.\n");
+          sim_log_debug(233U, "Atm128AlarmAsyncP", "Atm128AlarmAsyncP: no alarm set, set at max.\n");
         }
       else 
         {
           uint32_t now = /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128AlarmAsyncP$0$Counter$get();
 
 #line 120
-          sim_log_debug(235U, "Atm128AlarmAsyncP", "Atm128AlarmAsyncP: now-t0 = %llu, dt = %llu\n", now - /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128AlarmAsyncP$0$t0[sim_node()], /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128AlarmAsyncP$0$dt[sim_node()]);
+          sim_log_debug(234U, "Atm128AlarmAsyncP", "Atm128AlarmAsyncP: now-t0 = %llu, dt = %llu\n", now - /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128AlarmAsyncP$0$t0[sim_node()], /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128AlarmAsyncP$0$dt[sim_node()]);
 
           if ((uint32_t )(now - /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128AlarmAsyncP$0$t0[sim_node()]) >= /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128AlarmAsyncP$0$dt[sim_node()]) 
             {
@@ -11519,7 +11515,7 @@ static void /*AlarmCounterMilliP.Atm128AlarmAsyncC.Atm128AlarmAsyncP*/Atm128Alar
 static void HplAtm128Timer0AsyncP$Compare$set(uint8_t t)
 #line 463
 {
-  sim_log_debug(252U, "HplAtm128Timer0AsyncP", "HplAtm128Timer0AsyncP: Setting compare: %hhu\n", t);
+  sim_log_debug(251U, "HplAtm128Timer0AsyncP", "HplAtm128Timer0AsyncP: Setting compare: %hhu\n", t);
   /* atomic removed: atomic calls only */
 #line 465
   {
@@ -11600,7 +11596,7 @@ static void HplAtm128Timer0AsyncP$configure_overflow(sim_event_t *evt)
   overflowTime += sim_time();
   overflowTime -= (sim_time() - HplAtm128Timer0AsyncP$last_zero()) % (1 << HplAtm128Timer0AsyncP$shiftFromScale());
 
-  sim_log_debug(255U, "HplAtm128Timer0AsyncP", "Scheduling new overflow for %i at time %llu\n", sim_node(), overflowTime);
+  sim_log_debug(254U, "HplAtm128Timer0AsyncP", "Scheduling new overflow for %i at time %llu\n", sim_node(), overflowTime);
 
   evt->time = overflowTime;
 }
@@ -11647,7 +11643,7 @@ static void HplAtm128Timer0AsyncP$configure_compare(sim_event_t *evt)
   phaseOffset %= HplAtm128Timer0AsyncP$clock_to_sim(1 << HplAtm128Timer0AsyncP$shiftFromScale());
   compareTime -= phaseOffset;
 
-  sim_log_debug(244U, "HplAtm128Timer0AsyncP", "Configuring new compare of %i for %i at time %llu  (@ %llu)\n", (int )compareVal, sim_node(), compareTime, sim_time());
+  sim_log_debug(243U, "HplAtm128Timer0AsyncP", "Configuring new compare of %i for %i at time %llu  (@ %llu)\n", (int )compareVal, sim_node(), compareTime, sim_time());
 
   evt->time = compareTime;
 }
@@ -11693,10 +11689,10 @@ static error_t TossimPacketModelC$Control$start(void )
 #line 106
 {
   if (!TossimPacketModelC$initialized[sim_node()]) {
-      sim_log_error(131U, "TossimPacketModelC", "TossimPacketModelC: Control.start() called before initialization!\n");
+      sim_log_error(132U, "TossimPacketModelC", "TossimPacketModelC: Control.start() called before initialization!\n");
       return FAIL;
     }
-  sim_log_debug(132U, "TossimPacketModelC", "TossimPacketModelC: Control.start() called.\n");
+  sim_log_debug(133U, "TossimPacketModelC", "TossimPacketModelC: Control.start() called.\n");
   TossimPacketModelC$startDoneTask$postTask();
   return SUCCESS;
 }
@@ -11744,7 +11740,7 @@ static error_t TossimPacketModelC$Control$start(void )
 #line 118
   sim_set_node(mote);
   result = SimMoteP$SimMote$getVariableInfo(name, ptr, len);
-  sim_log_debug(122U, "SimMoteP", "Fetched %s of %i to be %p with len %i (result %i)\n", name, mote, *ptr, *len, result);
+  sim_log_debug(123U, "SimMoteP", "Fetched %s of %i to be %p with len %i (result %i)\n", name, mote, *ptr, *len, result);
   sim_set_node(tmpID);
   return result;
 }
@@ -11757,7 +11753,7 @@ static error_t TossimPacketModelC$Control$start(void )
 #line 127
   sim_set_node(mote);
   SimMoteP$startTime[sim_node()] = t;
-  sim_log_debug(123U, "SimMoteP", "Setting start time to %llu\n", SimMoteP$startTime[sim_node()]);
+  sim_log_debug(124U, "SimMoteP", "Setting start time to %llu\n", SimMoteP$startTime[sim_node()]);
   sim_set_node(tmpID);
   return;
 }
@@ -11792,7 +11788,7 @@ static void SimMoteP$SimMote$turnOn(void )
         }
       __nesc_nido_initialise(sim_node());
       SimMoteP$startTime[sim_node()] = sim_time();
-      sim_log_debug(121U, "SimMoteP", "Setting start time to %llu\n", SimMoteP$startTime[sim_node()]);
+      sim_log_debug(122U, "SimMoteP", "Setting start time to %llu\n", SimMoteP$startTime[sim_node()]);
       SimMoteP$isOn[sim_node()] = TRUE;
       sim_main_start_mote();
     }
@@ -12227,12 +12223,6 @@ static int __nesc_nido_resolve(int __nesc_mote,
     *size = sizeof(Node$lspTracker[__nesc_mote]);
     return 0;
   }
-  if (!strcmp(varname, "Node$cost"))
-  {
-    *addr = (uintptr_t)&Node$cost[__nesc_mote];
-    *size = sizeof(Node$cost[__nesc_mote]);
-    return 0;
-  }
   if (!strcmp(varname, "Node$lastSequenceTracker"))
   {
     *addr = (uintptr_t)&Node$lastSequenceTracker[__nesc_mote];
@@ -12599,7 +12589,6 @@ static void __nesc_nido_initialise(int __nesc_mote)
   memset((void *)&Node$tentativeList[__nesc_mote], 0, sizeof Node$tentativeList[__nesc_mote]);
   memset((void *)&Node$lspMAP[__nesc_mote], 0, sizeof Node$lspMAP[__nesc_mote]);
   memset((void *)&Node$lspTracker[__nesc_mote], 0, sizeof Node$lspTracker[__nesc_mote]);
-  memset((void *)&Node$cost[__nesc_mote], 0, sizeof Node$cost[__nesc_mote]);
   memcpy((void *)&Node$lastSequenceTracker[__nesc_mote], (void *)&(int [20]){ 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 }, sizeof Node$lastSequenceTracker[__nesc_mote]);
   memcpy((void *)&Node$totalAverageEMA[__nesc_mote], (void *)&(float [20]){ 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215, 0.0039215 }, sizeof Node$totalAverageEMA[__nesc_mote]);
   Node$busy[__nesc_mote] = FALSE;

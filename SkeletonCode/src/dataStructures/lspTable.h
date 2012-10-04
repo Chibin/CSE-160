@@ -4,7 +4,6 @@
 #define MAXNODES 20
 #define MAXNODEVAL MAXNODES
 
-
 typedef struct lspTuple{
 	uint8_t dest;
 	uint8_t nodeNcost;
@@ -30,13 +29,31 @@ void lspTableinit(lspTable* list){
 	list->numValues = 0;
 }
 
-bool lspTablePushBack(lspTable* cur, lspTuple newVal){
-	if(cur->numValues != MAXNODEVAL){
-	//	printf("Push back dest:%d  cost:%d nextHop:%d\n", newVal.dest,newVal.nodeNcost, newVal.nextHop);
-		cur->lspTuples[cur->numValues] = newVal;
-		cur->numValues++;
-		return TRUE;
-	}else return FALSE;
+bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost){
+	int i;
+	for(i = 0; i<list->numValues; i++){
+		if(cost < list->lspTuples[i].nodeNcost && newTuple.dest == list->lspTuples[i].dest){
+			list->lspTuples[i].dest = newTuple.dest;
+			list->lspTuples[i].nodeNcost = cost;
+			list->lspTuples[i].nextHop = newTuple.nextHop;
+			return TRUE;
+		}
+	}
+	return FALSE;
+}
+
+bool lspTablePushBack(lspTable* cur, lspTuple newVal){	
+	if(lspTupleReplace(cur,newVal,newVal.nodeNcost)){
+		dbg("Project2D","Replace from tentativeList dest:%d cost:%d nextHop:%d\n", newVal.dest, newVal.nodeNcost, newVal.nextHop);
+		return FALSE;
+	}
+	else{
+		if(cur->numValues != MAXNODEVAL){
+			cur->lspTuples[cur->numValues] = newVal;
+			cur->numValues++;
+			return TRUE;
+		}else return FALSE;
+	}
 }
 
 bool lspTableIsEmpty(lspTable* cur){
@@ -59,13 +76,10 @@ bool lspTableContains(lspTable* list, int node){
 bool lspTableContainsDest(lspTable* list, int node){
 	uint8_t i;
 	for(i = 0; i<list->numValues; i++){
-		//printf("comparing %d and %d \n", i, node);
 		if(node == list->lspTuples[i].dest){
-			//printf("true!!! \n");
 			 return TRUE;
 		}
 	}
-	//printf("FALSE! \n");
 	return FALSE;
 }
 
@@ -75,22 +89,7 @@ lspTuple lspTableGet(lspTable* list, int node){
 	for(i = 0; i<list->numValues; i++){
 		if(node == list->lspTuples[i].dest) return list->lspTuples[i];
 	}
-	//printf("It should never get here \n");
 	return derp;
-}
-
-bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost){
-	int i;
-	for(i = 0; i<list->numValues; i++){
-		if(cost < list->lspTuples[i].nodeNcost && newTuple.dest == list->lspTuples[i].dest){
-			//printf("found a pair \n");
-			list->lspTuples[i].dest = newTuple.dest;
-			list->lspTuples[i].nodeNcost = cost;
-			list->lspTuples[i].nextHop = newTuple.nextHop;
-			return TRUE;
-		}
-	}
-	return FALSE;
 }
 
 lspTuple lspTableRemove(lspTable* list, int node){
@@ -113,11 +112,11 @@ lspTuple lspTableRemove(lspTable* list, int node){
 	}	
 }
 
-lspSrc lspTableMinCost(lspTable* cur){
+lspTuple lspSrcGetMinCost(lspTable* cur){
 	int i;
 	int minNode;
 	lspTuple temp;
-	lspSrc temp2;
+	lspTuple temp2;
 	temp.nodeNcost = 255;
 	for(i = 0; i < cur->numValues; i++){
 		if(cur->lspTuples[i].nodeNcost < temp.nodeNcost){
@@ -125,9 +124,9 @@ lspSrc lspTableMinCost(lspTable* cur){
 			minNode = i;
 		}
 	}
-	temp2.src = cur->lspTuples[minNode].nextHop;
-	temp2.indexNumber = minNode;
-	//printf("min node is %d  dest:%d cost:%d nextHop:%d \n", minNode,cur->lspTuples[minNode].dest,cur->lspTuples[minNode].nodeNcost,cur->lspTuples[minNode].nextHop );
+	//temp2.src = cur->lspTuples[minNode].nextHop;
+	//temp2.indexNumber = minNode;
+	temp2 = lspTableRemove(cur, minNode);	
 	return temp2;
 }
 
@@ -142,9 +141,7 @@ int lspTableLookUp(lspTable* list, int dest){
 
 //Creates a Map of all the Nodes
 typedef struct lspMap{
-	//nx_int16_t neighbor[20];
 	uint8_t cost[20];
-
 }lspMap;
 
 void lspMapinitialize(lspMap *list, int TOS_NODE_ID){

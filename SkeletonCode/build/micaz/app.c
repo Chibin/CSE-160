@@ -210,7 +210,7 @@ typedef struct __nesc_unnamed4243 {
 } ldiv_t;
 
 
-typedef int (*__compar_fn_t)(const void *arg_0x2b1826fc0838, const void *arg_0x2b1826fc0b10);
+typedef int (*__compar_fn_t)(const void *arg_0x2b3bda63a838, const void *arg_0x2b3bda63ab10);
 # 25 "/home/maru/local/tinyos-2.1.1/tos/system/tos.h"
 typedef uint8_t bool;
 enum __nesc_unnamed4244 {
@@ -955,8 +955,8 @@ typedef struct sendBuffer {
 } sendBuffer;
 # 7 "/home/maru/workspace1/SkeletonCode/src/dataStructures/arrTimerList.h"
 typedef pair timerDataType;
-# 12 "/home/maru/workspace1/SkeletonCode/src/dataStructures/lspTable.h"
-#line 8
+# 11 "/home/maru/workspace1/SkeletonCode/src/dataStructures/lspTable.h"
+#line 7
 typedef struct lspTuple {
   uint8_t dest;
   uint8_t nodeNcost;
@@ -968,7 +968,7 @@ typedef struct lspTuple {
 
 
 
-#line 14
+#line 13
 typedef struct lspTable {
 
   lspTuple lspTuples[20];
@@ -979,13 +979,13 @@ lspTable;
 
 
 
-#line 21
+#line 20
 typedef struct lspSrc {
   uint8_t src;
   uint8_t indexNumber;
 } lspSrc;
-#line 148
-#line 144
+#line 145
+#line 141
 typedef struct lspMap {
 
   uint8_t cost[20];
@@ -1478,12 +1478,12 @@ typedef TMilli Node__neighborDiscoveryTimer__precision_tag;
 typedef TMilli Node__neighborUpdateTimer__precision_tag;
 typedef TMilli Node__lspTimer__precision_tag;
 typedef TMilli Node__pingTimeoutTimer__precision_tag;
-# 98 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
+# 95 "/home/maru/workspace1/SkeletonCode/src/Node.nc"
 enum Node____nesc_unnamed4314 {
-#line 98
+#line 95
   Node__sendBufferTask = 0U
 };
-#line 98
+#line 95
 typedef int Node____nesc_sillytask_sendBufferTask[Node__sendBufferTask];
 # 61 "/home/maru/local/tinyos-2.1.1/tos/system/SchedulerBasicP.nc"
 enum SchedulerBasicP____nesc_unnamed4315 {

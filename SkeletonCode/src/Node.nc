@@ -22,8 +22,6 @@
 #include "ping.h"
 
 
-
-
 module Node{
 	uses interface Boot;
 	uses interface Timer<TMilli> as pingTimeoutTimer;
@@ -243,8 +241,7 @@ implementation{
 				int difference; 
 				switch(myMsg->protocol){
 					case PROTOCOL_LINKSTATE:
-					if(!arrListContains(&lspTracker, myMsg->src, myMsg->seq)){
-	
+					if(!arrListContains(&lspTracker, myMsg->src, myMsg->seq)){	
 						if(arrListSize(&lspTracker) >= 30){
 							dbg("Project2L","Popping front\n");
 							pop_front(&lspTracker);	
@@ -259,7 +256,7 @@ implementation{
 						for(i = 0; i < totalNodes; i++){
 							if(tempArray[i] != -1 && tempArray[i] != 0)
 								dbg("Project2L", "Printing out src:%d neighbor:%d  cost:%d \n", myMsg->src, i , tempArray[i]);
-						}	
+						}
 						tempArray = (uint8_t*)myMsg->payload;
 						dbg("Project2L","LINK STATE OF GREATNESS. FLOODING THE NETWORK from %d seq#: %d :< \n", myMsg->src, myMsg->seq);								
 						for(i = 0; i < totalNodes; i++){
@@ -517,12 +514,6 @@ implementation{
 		int i, j;
 		uint8_t lspCostList[20] = {-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1,-1};	
 		lspMapinitialize(&lspMAP,TOS_NODE_ID);
-
-		//this needs to be changed for the extra credit
-		//Currently, it assumes that the cost will always be 1 if it's a neighbor
-		//Will need to make function that will determine the cost depending on the reliability of the connection between 2 nodes
-		//WIll probably use the broadcast neighbor discovery as a way to check the reliability		
-		cost[0] = 1;	
 		
 		for(i = 0; i < friendList.numValues; i++){
 			if(1/totalAverageEMA[friendList.values[i].src]*10 < 255){
@@ -542,8 +533,7 @@ implementation{
 		dbg("Project2L", "Sending LSPs EVERYWHERE \n");	
 		dbg("Project2L", "END \n\n");
 	
-	}
-	
+	}	
 	/**The pseudo code:
 	 * 		M = {s}
 	 * 		for each n in N - {s}
@@ -559,67 +549,36 @@ implementation{
 	 *		• s: The node executing the algorithm
 	 *		• L(i,j): cost of edge (i,j) (inf if no edge connects)
 	 *		• C(i): Cost of the path from s to i.
-	 * 
 	 */
-	void dijkstra(){
-		int i;	
-		lspTuple lspTup;
-		lspTuple temp;
-		lspTuple tupleCostCheck;
-		lspSrc temp2;
-		int lspTupNum;
-		int neighborCheck;
+	 
+	 void dijkstra(){
+		int i, neighborCheck;	
+		lspTuple lspTup, temp;
 		lspTableinit(&tentativeList);
 		lspTableinit(&confirmedList);
-		temp.dest = TOS_NODE_ID;
-		temp.nodeNcost = 0;
-		temp.nextHop = TOS_NODE_ID;
-	
+		temp.dest = TOS_NODE_ID; temp.nodeNcost = 0; temp.nextHop = TOS_NODE_ID;
 		dbg("Project2D","start of dijkstra \n");
-		dbg("Project2D","PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
-		lspTablePushBack(&confirmedList, temp);
-		//cost of path from this node to node i
-		//is the same as lspMap[TOS_NODE_ID].cost[i]
-		for(i = 0; i < totalNodes; i++){	
-			//My neighbors do not have a cost of infinity, in this case 255
-			if(lspMAP[TOS_NODE_ID].cost[i] != 255 && lspMAP[TOS_NODE_ID].cost[i] != 0){
-				temp.nextHop = i;
-				temp.nodeNcost = lspMAP[TOS_NODE_ID].cost[i];
-				temp.dest = i;
-				dbg("Project2D","PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
-				lspTablePushBack(&tentativeList, temp);	
-			}
-		}
+		dbg("Project2D","PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
+		lspTablePushBack(&tentativeList, temp);
 		while(!lspTableIsEmpty(&tentativeList)){
-			temp2 = lspTableMinCost(&tentativeList);
-			lspTupNum = temp2.src;
-			lspTup = lspTableRemove(&tentativeList, temp2.indexNumber);
-			dbg("Project2D","PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", lspTup.dest,lspTup.nodeNcost, lspTup.nextHop);
-			if(!lspTableContainsDest(&confirmedList, lspTup.dest))
-				lspTablePushBack(&confirmedList,lspTup);
-			neighborCheck = lspTup.dest;	
+			lspTup = lspSrcGetMinCost(&tentativeList);  //gets the min cost node and passes the nextHop value. It also removes it from the list
+			neighborCheck = lspTup.dest;
+			if(!lspTableContains(&confirmedList,lspTup.dest))
+				if(lspTablePushBack(&confirmedList,lspTup))
+					dbg("Project2D","PushBack from confirmedList dest:%d cost:%d nextHop:%d \n", lspTup.dest,lspTup.nodeNcost, lspTup.nextHop);
 			for(i = 0; i < totalNodes; i++){
-				//dbg("Project2D", "Printing out the list neighbor:%d src:%d cost:%d \n",i, neighborCheck, lspMAP[neighborCheck].cost[i]);
-				if(lspMAP[neighborCheck].cost[i] != 255 && lspMAP[neighborCheck].cost[i] != 0){	
-					temp.nextHop = lspTupNum;
-					temp.nodeNcost = lspMAP[neighborCheck].cost[i]+lspTup.nodeNcost;
-					temp.dest = i;
-					if(lspTupleReplace(&tentativeList,temp,lspMAP[neighborCheck].cost[i]+lspTup.nodeNcost)){
-						dbg("Project2D","Replace from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
-					}
-					else
-						if(!lspTableContainsDest(&confirmedList, i)){
-							dbg("Project2D","PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
-							lspTablePushBack(&tentativeList, temp);
-						}
-				}
+				temp.nextHop = (lspTup.nextHop == TOS_NODE_ID)?i:lspTup.nextHop;
+				temp.nodeNcost = lspMAP[neighborCheck].cost[i]+lspTup.nodeNcost;
+				temp.dest = i;
+				if(!lspTableContainsDest(&confirmedList, i) && lspMAP[neighborCheck].cost[i] != 255 && lspMAP[i].cost[neighborCheck] != 255)
+					if(lspTablePushBack(&tentativeList, temp))
+						dbg("Project2D","PushBack from tentativeList dest:%d cost:%d nextHop:%d \n", temp.dest, temp.nodeNcost, temp.nextHop);
 			}
 		}
 		dbg("Project2D", "Printing the routing table! \n");
-		for(i = 0; i < confirmedList.numValues; i++){
+		for(i = 0; i < confirmedList.numValues; i++)
 			dbg("Project2D", "dest:%d cost:%d nextHop:%d \n",confirmedList.lspTuples[i].dest,confirmedList.lspTuples[i].nodeNcost,confirmedList.lspTuples[i].nextHop);
-		}
-		dbg("Project2D", "End of dijkstra! \n");	
+		dbg("Project2D", "End of dijkstra! \n");
 	}
 
 	int forwardPacketTo(lspTable* list, int dest){	
