@@ -1,6 +1,8 @@
 #ifndef CONNECTION_BUFFER_H
 #define CONNECTION_BUFFER_H
+
 #include "transport.h"
+
 
 #ifndef MAX_CONNECTION
 #define MAX_CONNECTION 10
@@ -39,7 +41,6 @@ pack connectionBufferPopFront(connectionBuffer* cur){
 	returnVal = cur->connection[0];
 	for(i = 0; i < cur->numValues; ++i)
 		cur->connection[i-1] = cur->connection[i];
-	
 	--cur->numValues;
 	return returnVal;
 }

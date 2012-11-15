@@ -210,7 +210,7 @@ typedef struct __nesc_unnamed4243 {
 } ldiv_t;
 
 
-typedef int (*__compar_fn_t)(const void *arg_0x2b62ef31b838, const void *arg_0x2b62ef31bb10);
+typedef int (*__compar_fn_t)(const void *arg_0x2b49aab6d838, const void *arg_0x2b49aab6db10);
 # 25 "/home/maru/local/tinyos-2.1.1/tos/system/tos.h"
 typedef uint8_t bool;
 enum __nesc_unnamed4244 {
@@ -919,8 +919,8 @@ typedef struct socketArr {
   uint16_t numValues;
   uint8_t limit;
 } socketArr;
-# 13 "/home/maru/workspace1/CSE-160/SkeletonCode/src/dataStructures/connectionBuffer.h"
-#line 9
+# 15 "/home/maru/workspace1/CSE-160/SkeletonCode/src/dataStructures/connectionBuffer.h"
+#line 11
 typedef struct connectionBuffer {
   pack connection[10];
   uint8_t limit;
@@ -936,23 +936,25 @@ enum TCPSOCKET_STATE {
   SHUTDOWN = 5, 
   CLOSING = 6
 };
-#line 35
+#line 38
 #line 25
 typedef struct TCPSocketAL {
 
   int index;
   bool isAvailable;
   int socketState;
-  int srcPort, srcAddr;
-  int destPort, destAddr;
+  uint8_t srcPort;
+  uint16_t srcAddr;
+  uint8_t destPort;
+  int destAddr;
   socketArr sendBuffer;
   socketArr recvBuffer;
-  connectionBuffer connectBuff;
-} TCPSocketAL;
-typedef TCPSocketAL TCPManagerC__TCPManager__val_t;
-typedef pack TCPManagerC__TCPManager__val2_t;
-typedef TCPSocketAL TCPManagerC__TCPSocket__val_t;
-typedef TMilli TCPManagerC__sendTimer__precision_tag;
+  connectionBuffer pendingConnections;
+} 
+TCPSocketAL;
+typedef TCPSocketAL TCPSocketC__TCPManager__val_t;
+typedef pack TCPSocketC__TCPManager__val2_t;
+typedef TCPSocketAL TCPSocketC__TCPSocket__val_t;
 # 61 "/home/maru/local/tinyos-2.1.1/tos/system/SchedulerBasicP.nc"
 enum SchedulerBasicP____nesc_unnamed4305 {
 
