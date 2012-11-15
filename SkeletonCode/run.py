@@ -24,10 +24,18 @@ t.addChannel("cmdDebug", sys.stdout)
 #t.addChannel("Project1F", sys.stdout)
 #t.addChannel("Project1N", sys.stdout)
 #t.addChannel("Project2L", sys.stdout)
-t.addChannel("Project2D", sys.stdout)
+#t.addChannel("Project2D", sys.stdout)
 #t.addChannel("Project2F", sys.stdout)
 #t.addChannel("Project2N", sys.stdout)
 #t.addChannel("Project2test", sys.stdout)
+t.addChannel("Project3S", sys.stdout)
+t.addChannel("Project3C", sys.stdout)
+t.addChannel("Project3Socket", sys.stdout)
+t.addChannel("Project3Manager", sys.stdout)
+t.addChannel("Project3Node", sys.stdout)
+t.addChannel("transport", sys.stdout)
+#t.addChannel("clientAL", sys.stdout)
+#t.addChannel("serverAL", sys.stdout)
 
 noise = open("no_noise.txt", "r")
 for line in noise:
@@ -89,8 +97,12 @@ def sendCMD(string):
 
 
 runTime(150)
-sendCMD("0 6 cmd ping 5 PING")
+#cmd client <src port> <dest port> <dest addr>
+#cmd server <src port>
+sendCMD("0 5 cmd server 132")
+sendCMD("0 6 cmd client 99 132 5")
+#sendCMD("0 6 cmd ping 4 PING")
 runTime(200)
-sendCMD("2 2 cmd kill")
+#sendCMD("2 2 cmd kill")
 runTime(200)
-sendCMD("0 6 cmd ping 5 PING")
+#sendCMD("0 6 cmd ping 5 PING")

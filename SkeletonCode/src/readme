@@ -1,0 +1,4 @@
+A change will be needed to get the interfaces and modules read in the make file. The following should be included:
+	CFLAGS += -I ./lib -I ./lib/Interfaces -I ./lib/Modules
+
+

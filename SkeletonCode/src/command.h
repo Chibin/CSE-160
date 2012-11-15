@@ -46,6 +46,18 @@ bool isPing(uint8_t *array, uint8_t size){
 	return FALSE;
 }
 
+bool isClient(uint8_t *array, uint8_t size){
+	if(array[4] == 'c' && array[5] == 'l' && array[6] == 'i' && array[7] == 'e' 
+	&& array[8] == 'n' && array[9] == 't' && array[10] == ' ')return TRUE;
+	return FALSE;
+}
+
+bool isServer(uint8_t *array, uint8_t size){
+	if(array[4] == 's' && array[5] == 'e' && array[6] == 'r' && array[7] == 'v' 
+	&& array[8] == 'e' && array[9] == 'r' && array[10] == ' ' && array[11] >= '0'
+	&& array[11] <= '9')return TRUE;
+	return FALSE;
+}
 /*
  * getCmd - processes a string to find out which command is being issued. A Command ID is returned based on the
  * enum declared. Also debugging information is sent to the cmdDebug channel.
@@ -74,6 +86,15 @@ int getCMD(uint8_t *array, uint8_t size){
 		return CMD_KILL;
 	}
 	
+	if(isClient(array,size)){
+		dbg("cmdDebug","Command Type: Client \n");
+		return CMD_TEST_CLIENT;
+	}
+	
+	if(isServer(array,size)){
+		dbg("cmdDebug", "Command Type: Server \n");	
+		return CMD_TEST_SERVER;
+	}
 	dbg("cmdDebug", "CMD_ERROR: \"%s\" does not match any known commands.\n", array);
 	return CMD_ERROR;
 }

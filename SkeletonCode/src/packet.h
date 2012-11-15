@@ -1,6 +1,5 @@
 //Author: UCM ANDES Lab
 //Date: 2/15/2012
-
 #ifndef PACKET_H
 #define PACKET_H
 

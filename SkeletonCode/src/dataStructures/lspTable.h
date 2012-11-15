@@ -43,17 +43,11 @@ bool lspTupleReplace(lspTable* list, lspTuple newTuple, int cost){
 }
 
 bool lspTablePushBack(lspTable* cur, lspTuple newVal){	
-	if(lspTupleReplace(cur,newVal,newVal.nodeNcost)){
-		dbg("Project2D","Replace from tentativeList dest:%d cost:%d nextHop:%d\n", newVal.dest, newVal.nodeNcost, newVal.nextHop);
-		return FALSE;
-	}
-	else{
 		if(cur->numValues != MAXNODEVAL){
 			cur->lspTuples[cur->numValues] = newVal;
 			cur->numValues++;
 			return TRUE;
 		}else return FALSE;
-	}
 }
 
 bool lspTableIsEmpty(lspTable* cur){
@@ -64,10 +58,10 @@ bool lspTableIsEmpty(lspTable* cur){
 }
 
 //returns true if the node and the lsp tuple has the same destination
-bool lspTableContains(lspTable* list, int node){
+bool lspTableContains(lspTable* list, lspTuple newVal){
 	uint8_t i;
 	for(i = 0; i<list->numValues; i++){
-		if(node == list->lspTuples[i].dest) return TRUE;
+		if(newVal.dest == list->lspTuples[i].dest) return TRUE;
 	}
 	return FALSE;
 }
@@ -112,7 +106,7 @@ lspTuple lspTableRemove(lspTable* list, int node){
 	}	
 }
 
-lspTuple lspSrcGetMinCost(lspTable* cur){
+lspTuple lspTupleRemoveMinCost(lspTable* cur){
 	int i;
 	int minNode;
 	lspTuple temp;
@@ -124,9 +118,7 @@ lspTuple lspSrcGetMinCost(lspTable* cur){
 			minNode = i;
 		}
 	}
-	//temp2.src = cur->lspTuples[minNode].nextHop;
-	//temp2.indexNumber = minNode;
-	temp2 = lspTableRemove(cur, minNode);	
+	temp2 = lspTableRemove(cur, minNode);
 	return temp2;
 }
 
