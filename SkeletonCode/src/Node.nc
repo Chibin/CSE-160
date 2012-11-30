@@ -123,13 +123,13 @@ implementation{
 	
 	async command void NodeA.sendTransport(transport *tcpHeader, uint16_t destAddr){
 		int forwardTo;
-		if(tcpHeader->seq == 0)
-			tcpHeader->seq = tcpDataSequenceNum;
+		//if(tcpHeader->seq == 0)
+			//tcpHeader->seq = tcpDataSequenceNum;
 		dijkstra();
 		forwardTo = forwardPacketTo(&confirmedList,destAddr);
-		makePack(&sendPackage,TOS_NODE_ID, destAddr,MAX_TTL,PROTOCOL_TCP, tcpDataSequenceNum, tcpHeader,20);
+		makePack(&sendPackage,TOS_NODE_ID, destAddr,MAX_TTL,PROTOCOL_TCP, tcpHeader->seq, tcpHeader,20);
 		sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, forwardTo);
-		tcpDataSequenceNum++;
+		//tcpDataSequenceNum++;
 		post sendBufferTask();
 	}
 	

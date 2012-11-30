@@ -105,8 +105,8 @@ implementation{
 		}else if(call TCPSocket.isClosed( (mClient.socket) )){
 			uint32_t endTime = call ClientTimer.getNow();
 			
-			dbg("clientAL", "clientAL - Conection Closed at time: %lu \n Bytes sent: %lu\n Time Elapsed: %lu\n Bytes per Second %lu\n",
-			endTime, mClient.position, (endTime - mClient.startTime), (mClient.position * 1000 / (endTime - mClient.startTime)) );
+			dbg("clientAL", "clientAL - Conection Closed at time: %lu \n Bytes sent: %lu\n Time Elapsed: %lu\n Bytes per Second %f\n",
+			endTime, mClient.position, (endTime - mClient.startTime), (mClient.position * 1000.0 / (endTime - mClient.startTime)) );
 			
 			call TCPSocket.release(mClient.socket);
 			call ClientTimer.stop();

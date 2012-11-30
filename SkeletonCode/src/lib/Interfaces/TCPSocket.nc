@@ -18,7 +18,7 @@ interface TCPSocket<val_t>{
 	async command int16_t write(val_t *input, uint8_t *writeBuffer, uint16_t pos, uint16_t len);
 	
 	//---added
-	async command int16_t send(val_t *input, uint8_t *writeSocketBuffer);
+//	async command int16_t send(val_t *input, uint8_t *writeSocketBuffer);
 	async command int16_t receive(val_t *input, uint8_t *readSocketBuffer);
 	
 	//----

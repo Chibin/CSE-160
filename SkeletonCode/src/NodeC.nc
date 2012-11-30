@@ -40,6 +40,7 @@ implementation {
 	components new TimerMilliC() as ClientWorkerTimer;
 	
 	components new TimerMilliC() as sendTimer;
+	components new TimerMilliC() as waitCloseTimer;
 	//components RandomC as Random;
 	components TCPManagerC as TCPManager;
 	components TCPSocketC as ALSocket;
@@ -79,5 +80,6 @@ implementation {
 	TCPManager.TCPSocket -> ALSocket;
 	ALSocket.TCPManager -> TCPManager;
 	TCPManager.sendTimer -> sendTimer;
+	TCPManager.waitCloseTimer -> waitCloseTimer;
 
 }

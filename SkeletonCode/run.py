@@ -34,8 +34,8 @@ t.addChannel("Project3Socket", sys.stdout)
 t.addChannel("Project3Manager", sys.stdout)
 t.addChannel("Project3Node", sys.stdout)
 t.addChannel("transport", sys.stdout)
-#t.addChannel("clientAL", sys.stdout)
-#t.addChannel("serverAL", sys.stdout)
+t.addChannel("clientAL", sys.stdout)
+t.addChannel("serverAL", sys.stdout)
 
 noise = open("no_noise.txt", "r")
 for line in noise:

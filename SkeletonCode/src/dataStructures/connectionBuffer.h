@@ -22,6 +22,19 @@ bool connectionBufferPushBack(connectionBuffer* cur, pack newVal){
 	}else return FALSE;
 }
 
+bool pendingConnectionCheck(connectionBuffer* cur, pack newVal){
+ uint8_t i;
+ transport temp2, temp1;
+  memcpy(&temp1,(transport*)&newVal.payload,sizeof(transport));
+	for(i = 0; i < cur->numValues; i++){
+		memcpy(&temp2,(transport*)&cur->connection[i],sizeof(transport));
+		dbg("Project3Manager","packInfo: srcPort:%d %d src:%d %d\n",temp2.srcPort, temp1.srcPort, cur->connection[i].src, newVal.src);
+		if(cur->connection[i].src == newVal.src && temp1.srcPort == temp2.srcPort);
+			return TRUE;
+	}
+	return FALSE;
+}
+
 int connectionBufferSize(connectionBuffer* cur){
 	return cur->numValues;
 }

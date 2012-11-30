@@ -10,4 +10,5 @@ interface TCPManager<val_t, val2_t>{
 	 */
 	command val_t *getSocketfd(uint8_t);
 	command val_t * getSocket(uint8_t portNum, uint8_t dest);
+	
 }

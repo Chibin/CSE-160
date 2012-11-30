@@ -45,12 +45,15 @@ void printTransport(transport *input){
 		case TRANSPORT_DATA:
 			dbg_clear("transport", "DATA ");
 			break;
+		case TRANSPORT_FINACK:
+			dbg_clear("transport", "FINACK ");
+			break;
 		default:
 			dbg_clear("transport", "UNKNOWN");
 	}
 	dbg_clear("transport", "Window: %lu, Seq: %lu, Payload: ", input->window, input->seq, input->payload);
 
-	for(i=0; i<TRANSPORT_MAX_PAYLOAD_SIZE; i++){
+	for(i=0; i<input->len; i++){
 		dbg_clear("transport", "%hhu, ", input->payload[i]);
 	}
 
