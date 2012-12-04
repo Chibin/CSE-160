@@ -75,6 +75,9 @@ implementation{
 	TCPSocketAL *mSocket;
 	
 	//-----
+	//Project 4 variables
+	bool isClient = FALSE;
+	//----------------------
 	bool busy = FALSE;
 	
 	message_t pkt;
@@ -123,13 +126,10 @@ implementation{
 	
 	async command void NodeA.sendTransport(transport *tcpHeader, uint16_t destAddr){
 		int forwardTo;
-		//if(tcpHeader->seq == 0)
-			//tcpHeader->seq = tcpDataSequenceNum;
 		dijkstra();
 		forwardTo = forwardPacketTo(&confirmedList,destAddr);
-		makePack(&sendPackage,TOS_NODE_ID, destAddr,MAX_TTL,PROTOCOL_TCP, tcpHeader->seq, tcpHeader,20);
+		makePack(&sendPackage,TOS_NODE_ID, destAddr,MAX_TTL,PROTOCOL_TCP,tcpHeader->seq, (uint8_t*)tcpHeader,20);
 		sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, forwardTo);
-		//tcpDataSequenceNum++;
 		post sendBufferTask();
 	}
 	
@@ -139,7 +139,6 @@ implementation{
 		dijkstra();
 		forwardTo = forwardPacketTo(&confirmedList,destAddr);
 		createTransport(&tcpHeader,srcPort,destPort, flagType, 1, tcpDataSequenceNum, payload, len);
-	//	tcpHeader.acknowledgment = 0;
 		makePack(&sendPackage,TOS_NODE_ID, destAddr,MAX_TTL,PROTOCOL_TCP, tcpDataSequenceNum, &tcpHeader,20);
 		sendBufferPushBack(&packBuffer, sendPackage, sendPackage.src, forwardTo);
 		tcpDataSequenceNum++;
@@ -156,7 +155,6 @@ implementation{
 		dbg("Project3Node","Forwarding to %d and src is %d \n", forwardTo, TOS_NODE_ID);
 		
 		createTransport(&tcpHeader,srcPort,destPort, flagType, 1, tcpSequenceNum,"", TRANSPORT_MAX_PAYLOAD_SIZE);
-		//tcpHeader.acknowledgment = 0;
 		printTransport(&tcpHeader);
 		dbg("Project3Node", "destPort:%d!!!!!! \n",tcpHeader.destPort);
 		makePack(&sendPackage,TOS_NODE_ID, destAddr,MAX_TTL,PROTOCOL_TCP, tcpSequenceNum, &tcpHeader,20);
@@ -236,11 +234,7 @@ implementation{
 			int incrementor = PING_CMD_LENGTH, i, j, check;
 			transport tHeader;
 			bool derping;
-			if(myMsg->protocol == PROTOCOL_TCP){
-				//DEBUG CHECKS
-				//dbg("Project3Node","Checking stuff \n\n");
-				
-			}
+			
 			if(TOS_NODE_ID==myMsg->dest){
 				//dbg("genDebug", "Packet from %d has arrived! Msg: %s\n", myMsg->src, myMsg->payload);
 				switch(myMsg->protocol){
@@ -326,8 +320,9 @@ implementation{
 							call TCPManager.init();
 							mSocket = (call TCPManager.socket());
 							call ALSocket.bind(mSocket, srcPort, TOS_NODE_ID);
-							call ALSocket.connect(mSocket, destAddr, destPort);
-							call ALClient.init(mSocket);
+							//call ALSocket.connect(mSocket, destAddr, destPort);
+							//call ALClient.init(mSocket);
+							isClient = TRUE;
 							dbg("Project3C", "checking state: %d \n", mSocket->socketState);
 						break;
 						case CMD_TEST_SERVER:
@@ -343,6 +338,32 @@ implementation{
 							call ALSocket.listen(mSocket, 5);
 							call ALServer.init(mSocket);
 							dbg("Project3S", "checking state: %d \n", mSocket->socketState);
+						break;
+						case CMD_HELLO:
+						if(isClient){
+							call ALSocket.connect(mSocket, 1, 41);
+							call ALClient.init(mSocket);
+							dbg("Project4Client", "HELLO! %d \n",sizeof(myMsg->payload));
+							memcpy(&createMsg, (myMsg->payload) + 4, sizeof(myMsg->payload) - 4);
+							call ALClient.msg(&createMsg);
+							
+						}
+						else
+							dbg("Project4Client","Not a client!!! \n");
+						break;
+						case CMD_MSG:
+							if(mSocket->socketState == ESTABLISHED || mSocket->socketState != SYN_SENT){
+								dbg("Project4Client", "SENDING MESSAGES! \n");
+								memcpy(&createMsg, (myMsg->payload) + 4, sizeof(myMsg->payload) - 4);
+								call ALClient.msg(&createMsg);
+							}
+						break;
+						case CMD_LISTUSR:
+							if(mSocket->socketState == ESTABLISHED || mSocket->socketState != SYN_SENT){
+								dbg("Project4Client", "REQUESTING LIST OF USERS! \n");
+								memcpy(&createMsg, (myMsg->payload) + 4, sizeof(myMsg->payload) - 4);
+								call ALClient.msg(&createMsg);
+							}
 						break;
 						default:
 						break;

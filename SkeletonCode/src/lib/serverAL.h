@@ -10,6 +10,7 @@
 #ifndef SERVER_AL_H
 #define SERVER_AL_H
 #include "TCPSocketAL.h"
+#include "chatBuffer.h"
 
 typedef struct serverAL{
 	TCPSocketAL *socket;
@@ -17,13 +18,23 @@ typedef struct serverAL{
 }serverAL;
 
 enum{
-	SERVER_WORKER_BUFFER_SIZE = 128 // 128 bytes
+	SERVER_WORKER_BUFFER_SIZE = 128, // 128 bytes
+	NEWSERVER_BUFFER_SIZE = 128
 };
 
 typedef struct serverWorkerAL{
 	TCPSocketAL *socket;
 	uint16_t position;
 	uint8_t buffer[SERVER_WORKER_BUFFER_SIZE];
+	uint8_t currentMsgBuffer[NEWSERVER_BUFFER_SIZE];
+	uint8_t currentMsgBufferlen;
+	chatBuffer storedMsgs;
+	chatBuffer sendMsgs;
+	uint8_t currentlySendingMsg[NEWSERVER_BUFFER_SIZE];
+	uint8_t currentlySendinglen;
+	uint8_t usernameConnected[20];
+	uint8_t userportNum[20];
+	uint8_t newMsglen;
 	uint8_t id;
 }serverWorkerAL;
 

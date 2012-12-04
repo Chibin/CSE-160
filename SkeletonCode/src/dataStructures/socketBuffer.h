@@ -31,18 +31,18 @@ typedef struct socketArr{
 	uint8_t limit;
 }socketArr;
 
-typedef struct buffer{
+typedef struct bufferz{
 	uint8_t byte[MAX_BUFFER_SIZE];
 	uint16_t numValues;
 	uint8_t limit;
-}buffer;
+}bufferz;
 
-void bufferInit(buffer* cur, uint8_t limiter){
+void bufferInit(bufferz* cur, uint8_t limiter){
 	cur->numValues = 0;
 	cur->limit = limiter;
 }
 
-bool bufferPushBack(buffer* cur, uint8_t newVal){
+bool bufferPushBack(bufferz* cur, uint8_t newVal){
 	if(cur->numValues <= cur->limit-1){
 		cur->byte[cur->numValues] = newVal;
 		++cur->numValues;
@@ -50,7 +50,7 @@ bool bufferPushBack(buffer* cur, uint8_t newVal){
 	}else return FALSE;
 }
 
-uint8_t bufferPopFront(buffer* cur){
+uint8_t bufferPopFront(bufferz* cur){
 	uint8_t returnVal;
 	nx_uint8_t i;
 	returnVal = cur->byte[0];
@@ -60,7 +60,7 @@ uint8_t bufferPopFront(buffer* cur){
 	return returnVal;
 }
 
-int bufferSize(buffer* cur){
+int bufferSize(bufferz* cur){
 	return cur->numValues;
 }
 
@@ -145,15 +145,16 @@ socketData socketArrRemove(socketArr* cur, int seq, int type){
 }
 
 //---BUFFER
-void bufferCopy(buffer* cur, uint8_t* to, uint8_t pos, uint8_t len){
+void bufferCopy(bufferz* cur, uint8_t* to, uint8_t pos, uint8_t len){
 	int i;
-//	for(i = 0; i < len; i++){
-//		to[pos+i] = cur->byte[pos+i];
-//	}
-//for(i = 0; i < len; i++){
-//	dbg("Project3Socket"," bytes exist: %d \n", cur->byte[pos+i]);	
-//}
 	memcpy(to,&cur->byte[pos],len);
+}
+
+void toBufferCopy(bufferz* cur, uint8_t* to, uint8_t pos, uint8_t len){
+	int i;
+	memcpy(&cur->byte[pos],to,len);
+	dbg("Project4Client","BUFFERCOPY CHECK: %s", cur->byte);
+
 }
 //---------------------------------
 typedef struct retransBuffer{
@@ -268,25 +269,14 @@ bool retransBufferLBA(retransBuffer *curr, int16_t seq, uint16_t * lastByteAcked
 	uint8_t counterrr;
 	transport temp;
 	while(*lastByteAcked < seq-1) {
-		temp = retransBufferPopFront(curr);
-		*lastByteAcked = temp.seq;
-		dbg("genDebug", "removed seq%d\n", temp.seq);
+		if(curr->numValues != 0){
+			temp = retransBufferPopFront(curr);
+			*lastByteAcked = temp.seq;
+			dbg("genDebug", "removed seq%d\n", temp.seq);
+		}else
+			break;
 	}
 	return TRUE;
 }
-
-//bool retransBufferLBA(TCPSocketAL *input, retransBuffer *curr, int16_t seq){
-//	uint8_t i;
-//	transport temp;
-//	if(curr->numValues > 0){
-//		if(curr->values[0].seq <= seq && curr->values[0].type==TRANSPORT_DATA){
-//			dbg("Project3Socket","Popping something from retransBuffer \n");
-//			temp = retransBufferPopFront(curr);
-//			input->lastByteAcked=temp.seq;
-//			return TRUE;
-//		}
-//	}
-//	return FALSE;
-//}
 
 #endif /* SOCKET_BUFFER_H */

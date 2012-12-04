@@ -20,6 +20,7 @@ implementation{
 	TCPSocketAL socketTracker[MAX_SOCKET];
 	bool ConnectionCheck(pack* myMsg, transport* tHeader);
 	
+	
 	command void TCPManager.init(){
 		call TCPManager.socketInit();
 		dbg("Project3Manager", "TCPManager initializing \n");
@@ -37,6 +38,7 @@ implementation{
 			socketTracker[i].lastByteRead = 0;
 			socketTracker[i].lastByteReceived = 0;
 			socketTracker[i].nextByteExpected = 0;
+			socketTracker[i].timer = 0;
 			socketArrInit(&socketTracker[i].sendBuffer);
 			socketArrInit(&socketTracker[i].recvBuffer);
 			retransBufferInit(&socketTracker[i].frames);
@@ -130,11 +132,11 @@ implementation{
 						tHeader2 = retransBufferRemove(&temp->frames,tHeader.seq-1, TRANSPORT_SYN);
 						dbg("Project3Manager","Removing something with type:%d and seq:%d \n", tHeader2.type, tHeader2.seq);
 					}
-					tHeader2.destPort = temp->destPort; tHeader2.len = 0; tHeader2.seq = tHeader.seq; tHeader2.srcPort = temp->srcPort; tHeader2.type = TRANSPORT_ACK;
-					tHeader2.window = RECV_BUFFER_LIMITER-socketArrSize(&temp->recvBuffer);
+					//tHeader2.destPort = temp->destPort; tHeader2.len = 0; tHeader2.seq = tHeader.seq; tHeader2.srcPort = temp->srcPort; tHeader2.type = TRANSPORT_ACK;
+					//tHeader2.window = RECV_BUFFER_LIMITER-socketArrSize(&temp->recvBuffer);
 					temp->windowCheck = tHeader.window;
-					call node.sendTransport(&tHeader2,myMsg.src);
-					dbg("Project3Manager","Sending ACK \n");
+					//call node.sendTransport(&tHeader2,myMsg.src);
+					dbg("Project3Manager","Connection established \n");
 					temp->socketState = ESTABLISHED;
 				}
 			break;
@@ -143,7 +145,7 @@ implementation{
 				if(temp->socketState == ESTABLISHED || temp->socketState == FIN_SENT){
 					//now I can remove it from the buffer
 					//gotta do some buffer checks to remove properly the right datas
-					dbg("Project3Manager", "Got the ACK for the sent packet \n");
+					dbg("Project3Manager", "Got the ACK for the sent packet index:%d \n", temp3->index);
 					
 					temporary = getSockData(&temp->sendBuffer, 0);
 					dbg("Project3Manager","byte:%d seq:%d type:%d len:%d \n",temporary.byte, temporary.seq,temporary.type,temporary.len);
@@ -157,15 +159,15 @@ implementation{
 						windowCheck = 0;
 						windowCheck = tHeader.window;
 						dbg("Project3Manager","SIZE OF WINDOW IS: %d sizeofBuffer is: %d \n", windowCheck,sizeOfBuffer);
-						while(windowCheck != 0 && sizeOfBuffer > 0 ){
+						while(windowCheck != 0 && sizeOfBuffer > 0){
 							if(sizeOfBuffer < windowCheck)
 									windowCheck = sizeOfBuffer;
 									
 							if(windowCheck < TRANSPORT_MAX_PAYLOAD_SIZE){
 								if(sizeOfBuffer < windowCheck)
 									windowCheck = sizeOfBuffer;
-								bufferCopy(&temp->writeBuffer,&payload2, bytesToWrite, windowCheck);
-								createTransport(&framedtcpHeader, temp->srcPort, temp->destPort, TRANSPORT_DATA, 0, temp->lastByteSent+windowCheck, &payload2, windowCheck);
+								bufferCopy(&temp->writeBuffer,(uint8_t*)&payload2, bytesToWrite, windowCheck);
+								createTransport(&framedtcpHeader, temp->srcPort, temp->destPort, TRANSPORT_DATA, 0, temp->lastByteSent+windowCheck,(uint8_t*) &payload2, windowCheck);
 								printTransport(&framedtcpHeader);
 								retransBufferPushBack(&temp->frames,framedtcpHeader);
 								temp->lastByteSent+= windowCheck;
@@ -174,8 +176,8 @@ implementation{
 								windowCheck = 0;
 							}
 							else{								
-								bufferCopy(&temp->writeBuffer,&payload2,bytesToWrite, TRANSPORT_MAX_PAYLOAD_SIZE);
-								createTransport(&framedtcpHeader, temp->srcPort, temp->destPort, TRANSPORT_DATA, 0, temp->lastByteSent+TRANSPORT_MAX_PAYLOAD_SIZE ,&payload2, TRANSPORT_MAX_PAYLOAD_SIZE);
+								bufferCopy(&temp->writeBuffer,(uint8_t*)&payload2,bytesToWrite, TRANSPORT_MAX_PAYLOAD_SIZE);
+								createTransport(&framedtcpHeader, temp->srcPort, temp->destPort, TRANSPORT_DATA, 0, temp->lastByteSent+TRANSPORT_MAX_PAYLOAD_SIZE ,(uint8_t*)&payload2, TRANSPORT_MAX_PAYLOAD_SIZE);
 								printTransport(&framedtcpHeader);
 								retransBufferPushBack(&temp->frames,framedtcpHeader);
 								temp->lastByteSent+= TRANSPORT_MAX_PAYLOAD_SIZE;
@@ -189,7 +191,68 @@ implementation{
 							bytesToWrite--;	
 						}
 					}
-				}else{
+					else{
+						//so we can send later
+						temp->receivedWindow = tHeader.window;
+						dbg("Project4Client","THE WRITE BUFFER IS EMPTY!!!!!!!!!!!!!!!!!!!!!!!!! %d \n\n", temp3->writeBuffer.numValues);
+					}
+				}else if(temp3->socketState == SYN_RECEIVED ||temp3->socketState == ESTABLISHED){
+					//now I can remove it from the buffer
+					//gotta do some buffer checks to remove properly the right datas
+					temp = temp3;
+					dbg("Project3Manager", "Got the ACK for the sent packet index:%d \n", temp->index);
+					
+					temporary = getSockData(&temp->sendBuffer, 0);
+					dbg("Project3Manager","byte:%d seq:%d type:%d len:%d \n",temporary.byte, temporary.seq,temporary.type,temporary.len);
+					dbg("genDebug", "%d %d\n", tHeader.seq, temp->lastByteAcked);
+				
+					retransBufferLBA(&temp->frames, tHeader.seq, &temp->lastByteAcked);
+					
+					//----sending portion
+					sizeOfBuffer = bufferSize(&temp->writeBuffer);
+					if(sizeOfBuffer > 0){
+						windowCheck = 0;
+						windowCheck = tHeader.window;
+						dbg("Project3Manager","SIZE OF WINDOW IS: %d sizeofBuffer is: %d \n", windowCheck,sizeOfBuffer);
+						while(windowCheck != 0 && sizeOfBuffer > 0){
+							if(sizeOfBuffer < windowCheck)
+									windowCheck = sizeOfBuffer;
+									
+							if(windowCheck < TRANSPORT_MAX_PAYLOAD_SIZE){
+								if(sizeOfBuffer < windowCheck)
+									windowCheck = sizeOfBuffer;
+								bufferCopy(&temp->writeBuffer,(uint8_t*)&payload2, bytesToWrite, windowCheck);
+								createTransport(&framedtcpHeader, temp->srcPort, temp->destPort, TRANSPORT_DATA, 0, temp->lastByteSent+windowCheck,(uint8_t*) &payload2, windowCheck);
+								printTransport(&framedtcpHeader);
+								retransBufferPushBack(&temp->frames,framedtcpHeader);
+								temp->lastByteSent+= windowCheck;
+								bytesToWrite += windowCheck;
+								sizeOfBuffer = 0;
+								windowCheck = 0;
+							}
+							else{								
+								bufferCopy(&temp->writeBuffer,(uint8_t*)&payload2,bytesToWrite, TRANSPORT_MAX_PAYLOAD_SIZE);
+								createTransport(&framedtcpHeader, temp->srcPort, temp->destPort, TRANSPORT_DATA, 0, temp->lastByteSent+TRANSPORT_MAX_PAYLOAD_SIZE ,(uint8_t*)&payload2, TRANSPORT_MAX_PAYLOAD_SIZE);
+								printTransport(&framedtcpHeader);
+								retransBufferPushBack(&temp->frames,framedtcpHeader);
+								temp->lastByteSent+= TRANSPORT_MAX_PAYLOAD_SIZE;
+								windowCheck -= TRANSPORT_MAX_PAYLOAD_SIZE;
+								bytesToWrite += TRANSPORT_MAX_PAYLOAD_SIZE;
+								sizeOfBuffer -= TRANSPORT_MAX_PAYLOAD_SIZE;
+							}
+						}
+						while(bytesToWrite != 0){
+							bufferPopFront(&temp->writeBuffer);
+							bytesToWrite--;	
+						}
+					}
+					else{
+						//so we can send later
+						temp->receivedWindow = tHeader.window;
+						dbg("Project4Client","THE WRITE BUFFER IS EMPTY!!!!!!!!!!!!!!!!!!!!!!!!! %d \n\n", temp->writeBuffer.numValues);
+					}	
+				}
+				else{
 					//find the right socket that will need to have connection established with the socket
 					if(temp3 == NULL){
 						dbg("Project3Manager", "Got the ACK, connection being established index:%d \n",temp->index);
@@ -200,17 +263,17 @@ implementation{
 						temp->socketState = ESTABLISHED;
 					}
 					else{
-						dbg("Project3Manager", "Got the ACK, connection being established index:%d \n",temp3->index);
-						if(retransBufferContains(&temp3->frames,tHeader.seq, TRANSPORT_SYNACK)){
-							tHeader2 = retransBufferRemove(&temp3->frames,tHeader.seq, TRANSPORT_SYNACK);
-							dbg("Project3Manager","Removing something with type:%d and seq:%d \n", tHeader2.type, tHeader2.seq);
-						}				
+						dbg("Project3Manager", "Got the ACK, index %d \n",temp3->index);
+						retransBufferLBA(&temp->frames, tHeader.seq, &temp->lastByteAcked);
+						
+						
 						 temp3->socketState = ESTABLISHED;
 					}
 				}
 			break;
 			case TRANSPORT_DATA:
 				temp3 = call TCPManager.getSocketfd(tHeader.srcPort);
+				dbg("Project4Client","I get here socketSTate:%d \n", temp3->socketState);
 			if(temp3->socketState == SYN_RECEIVED || temp3->socketState == ESTABLISHED){
 //					if(temp3->frames.numValues > 0)
 //						retransBufferPopFront(&temp3->frames); 
@@ -230,7 +293,7 @@ implementation{
 				}
 				dbg("Project3Manager", "Packet delivered successfully. index:%d seq:%d dest:%d src:%d packsrc:%d window:%d \n", temp3->index, tHeader.seq,temp3->destAddr, temp3->srcAddr, myMsg.src, (socketArrSize(&temp3->recvBuffer)));
 				// uint8_t srcPort, uint8_t destPort, uint8_t type, uint16_t window, int16_t seq, uint8_t *payload, uint8_t packetLength
-				createTransport(&tHeader2, temp3->srcPort,temp3->destPort,TRANSPORT_ACK,RECV_BUFFER_LIMITER-retransBufferSize(&temp3->recvFrames),temp3->lastByteReceived+1, tHeader.payload,tHeader.len);
+				createTransport(&tHeader2, temp3->srcPort,temp3->destPort,TRANSPORT_ACK,RECV_BUFFER_LIMITER-retransBufferSize(&temp3->recvFrames),temp3->lastByteReceived+1, (uint8_t*)tHeader.payload,tHeader.len);
 				printTransport(&tHeader2);
 				call node.sendTransport(&tHeader2, temp3->destAddr);
 				}
@@ -244,7 +307,7 @@ implementation{
 					call waitCloseTimer.startOneShot(1200);
 					//call waitCloseTimer.startPeriodic(12000);
 					
-					createTransport(&tHeader2, temp3->srcPort,temp3->destPort,TRANSPORT_FINACK,RECV_BUFFER_LIMITER-retransBufferSize(&temp3->recvFrames),temp3->lastByteReceived+1, tHeader.payload,tHeader.len);
+					createTransport(&tHeader2, temp3->srcPort,temp3->destPort,TRANSPORT_FINACK,RECV_BUFFER_LIMITER-retransBufferSize(&temp3->recvFrames),temp3->lastByteReceived+1, (uint8_t*)tHeader.payload,tHeader.len);
 					printTransport(&tHeader2);
 					call node.sendTransport(&tHeader2, temp3->destAddr);
 				}

@@ -113,4 +113,8 @@ implementation{
 			return;
 		}
 	}	
+
+	command void client.msg(void *myMsg){
+		// TODO Auto-generated method stub
+	}
 }

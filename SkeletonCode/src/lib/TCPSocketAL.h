@@ -36,10 +36,13 @@ typedef struct TCPSocketAL{
 	retransBuffer recvFrames;
 	socketArr sendBuffer;
 	socketArr recvBuffer;
-	buffer writeBuffer;
-	buffer readBuffer;
+	bufferz writeBuffer;
+	bufferz readBuffer;
 	connectionBuffer pendingConnections;
 	uint8_t windowCheck; //in bytes
+	uint16_t send;
+	uint8_t receivedWindow;
+	uint16_t timer;
 	//sender
 	//lastByteAcked <= lastByteSent
 	//lastByteSent <= lastByteWritten

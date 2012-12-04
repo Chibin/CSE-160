@@ -31,10 +31,11 @@ implementation {
 	components new AMReceiverC(6);
 	
 	// The main component
-	components serverC as ALServer;
-	components clientC as ALClient;
+	components serverp4C as ALServer;
+	components clientp4C as ALClient;
 	components new TimerMilliC() as ServerTimer;
 	components new TimerMilliC() as ServerWorkerTimer;
+	components new TimerMilliC() as sendMsgTimer;
 	
 	components new TimerMilliC() as ClientTimer;
 	components new TimerMilliC() as ClientWorkerTimer;
@@ -70,7 +71,7 @@ implementation {
 	ALServer.TCPSocket -> ALSocket;
 	ALServer.Random -> Random;
 	ALServer.TCPManager -> TCPManager;
-	
+	ALServer.sendMsgTimer -> sendMsgTimer;
 	ALClient.TCPSocket -> ALSocket;
 	ALClient.TCPManager -> TCPManager;
 	ALClient.Random -> Random;
@@ -81,5 +82,5 @@ implementation {
 	ALSocket.TCPManager -> TCPManager;
 	TCPManager.sendTimer -> sendTimer;
 	TCPManager.waitCloseTimer -> waitCloseTimer;
-
+	
 }

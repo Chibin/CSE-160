@@ -75,6 +75,7 @@ implementation{
 			socketArrInit(&output->sendBuffer);
 			socketArrInit(&output->recvBuffer);
 			bufferInit(&output->writeBuffer,50);
+			
 			//transport *output, uint8_t srcPort, uint8_t destPort, uint8_t type, uint16_t window, int16_t seq, uint8_t *payload, uint8_t packetLength
 			createTransport(&framedtcpHeader, output->srcPort, output->destPort,TRANSPORT_SYNACK, 5, tcpHeader.seq+1,(uint8_t*)"",0);
 			printTransport(&framedtcpHeader);
@@ -165,7 +166,7 @@ implementation{
 					input->lastByteRead +=length;
 				}
 				if(input->readBuffer.numValues < len)
-				len = input->readBuffer.numValues;			
+				len = input->readBuffer.numValues;
 				memcpy(&readBuffer[pos],&input->readBuffer.byte[0],len);
 				length = len;
 			}
@@ -173,7 +174,7 @@ implementation{
 		
 		while(len != 0 && bufferSize(&input->readBuffer) > 0){
 			poppedValue = bufferPopFront(&input->readBuffer);
-			dbg("Project3Socket","Popping asd gasdfasdf agafgjasdFLUSDFLSUDFSLDFU!!!! %d  sizeOfBuffer:%d len:%d \n", poppedValue, bufferSize(&input->readBuffer), len);
+			dbg("Project3Socket","Popping asd gasdfasdf agafgjasdFLUSDFLSUDFSLDFU!!!! %d %c sizeOfBuffer:%d len:%d \n", poppedValue, poppedValue, bufferSize(&input->readBuffer), len);
 			len--;
 		}
 
@@ -200,11 +201,19 @@ implementation{
 		
 		input->lastByteWritten += len;
 		
+		
 		dbg_clear("Project3Socket", "\n");
 		//uint8_t srcPort, uint8_t destPort, uint8_t type, uint16_t window, int16_t seq, uint8_t *payload, uint8_t packetLength
 		if(firstTime == 0){
 			test = bufferPopFront(&input->writeBuffer);
 			dbg("Project3Socket","First send %d \n",test);
+			input->lastByteSent++;
+			createTransport(&framedtcpHeader, input->srcPort,input->destPort,TRANSPORT_DATA,0,input->lastByteSent,(uint8_t*)&test,1);
+			retransBufferPushBack(&input->frames, framedtcpHeader); firstTime++;
+		}
+		if(retransBufferSize(&input->frames) == 0){
+			test = bufferPopFront(&input->writeBuffer);
+			dbg("Project3Socket","----------------------------------SENDSSSSSSSSSS----------------------:%d %d\n\n",firstTime+1,test);
 			input->lastByteSent++;
 			createTransport(&framedtcpHeader, input->srcPort,input->destPort,TRANSPORT_DATA,0,input->lastByteSent,(uint8_t*)&test,1);
 			retransBufferPushBack(&input->frames, framedtcpHeader); firstTime++;
